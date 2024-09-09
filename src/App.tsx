@@ -1,10 +1,10 @@
 import { Layout } from "antd";
 import React, { useState } from "react";
 import styled from "styled-components";
-// components
-import Sidebar from "./components/UI/sidebar/sidebar.ui";
-import Header from "./components/UI/header/header.ui";
-import Content from "./components/UI/content/content.ui";
+// UI
+import Header from "@UI/header/header.ui";
+import Content from "@UI/content/content.ui";
+import Sidebar from "@UI/sidebar/sidebar.ui";
 
 const Component = styled(Layout)`
   height: 100vh;
