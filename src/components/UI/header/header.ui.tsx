@@ -1,8 +1,16 @@
-import { FC } from "react";
-import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
-import { Button, Layout, theme } from "antd";
+import { FC, useState } from "react";
+import { Layout, theme } from "antd";
+import styled from "styled-components";
+import AuthPage from "@pages/auth/auth.page";
+import HeaderLoginButton from "./components/login-button.header";
+import HeaderCollapseButton from "./components/collapse-button.header";
 
-const { Header: Component } = Layout;
+const Component = styled(Layout.Header)`
+  padding: 0 14px 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`;
 
 interface IProps {
   collapsed: boolean;
@@ -13,19 +21,18 @@ const Header: FC<IProps> = ({ collapsed, setCollapsed }): JSX.Element => {
   const {
     token: { colorBgContainer }
   } = theme.useToken();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
-    <Component style={{ padding: 0, background: colorBgContainer }}>
-      <Button
-        type="text"
-        icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-        onClick={() => setCollapsed(!collapsed)}
-        style={{
-          fontSize: "16px",
-          width: 64,
-          height: 64
-        }}
-      />
+    <Component
+      style={{
+        background: colorBgContainer
+      }}
+    >
+      <HeaderCollapseButton collapsed={collapsed} setCollapsed={setCollapsed} />
+      <HeaderLoginButton setIsModalOpen={setIsModalOpen} />
+
+      <AuthPage isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
     </Component>
   );
 };

@@ -12,9 +12,10 @@ export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: {
-      common: path.resolve(__dirname, "./src/components/common"),
-      UI: path.resolve(__dirname, "./src/components/UI"),
-      pages: path.resolve(__dirname, "./src/components/pages")
+      "@common": path.resolve(__dirname, "./src/components/common"),
+      "@UI": path.resolve(__dirname, "./src/components/UI"),
+      "@pages": path.resolve(__dirname, "./src/components/pages"),
+      "@forms": path.resolve(__dirname, "./src/forms")
     }
   }
 });

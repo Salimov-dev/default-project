@@ -15,7 +15,6 @@ interface IProps {
 const Sidebar: FC<IProps> = ({ collapsed }): JSX.Element => {
   return (
     <Sider trigger={null} collapsible collapsed={collapsed}>
-      <div className="demo-logo-vertical" />
       <Menu
         theme="dark"
         mode="inline"

@@ -12,7 +12,8 @@
     "paths": {
       "@common/*": ["src/components/common/*"],
       "@UI/*": ["src/components/UI/*"],
-      "@pages/*": ["src/components/pages/*"]
+      "@pages/*": ["src/components/pages/*"],
+      "@forms/*": ["src/forms/*"]
     },
     "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
