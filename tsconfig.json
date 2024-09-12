@@ -13,7 +13,10 @@
       "@common/*": ["src/components/common/*"],
       "@UI/*": ["src/components/UI/*"],
       "@pages/*": ["src/components/pages/*"],
-      "@forms/*": ["src/forms/*"]
+      "@forms/*": ["src/forms/*"],
+      "@config/*": ["src/config/*"],
+      "@services/*": ["src/services/*"],
+      "@store/*": ["src/store/*"]
     },
     "allowImportingTsExtensions": true,
     "resolveJsonModule": true,

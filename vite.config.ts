@@ -15,7 +15,10 @@ export default defineConfig({
       "@common": path.resolve(__dirname, "./src/components/common"),
       "@UI": path.resolve(__dirname, "./src/components/UI"),
       "@pages": path.resolve(__dirname, "./src/components/pages"),
-      "@forms": path.resolve(__dirname, "./src/forms")
+      "@forms": path.resolve(__dirname, "./src/forms"),
+      "@config": path.resolve(__dirname, "./src/config"),
+      "@services": path.resolve(__dirname, "./src/services"),
+      "@store": path.resolve(__dirname, "./src/store")
     }
   }
 });

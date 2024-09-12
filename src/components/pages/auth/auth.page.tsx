@@ -2,6 +2,7 @@ import { FC, useState } from "react";
 import styled from "styled-components";
 import { Modal, Segmented } from "antd";
 import { LoginOutlined, UserAddOutlined } from "@ant-design/icons";
+// forms
 import LoginForm from "@forms/auth/login.form";
 import RegisterForm from "@forms/auth/register.form";
 
@@ -21,9 +22,17 @@ const Content = styled.div`
   flex-direction: column;
 `;
 
+const options = [
+  { label: "ВОЙТИ", value: "login", icon: <LoginOutlined /> },
+  {
+    label: "РЕГИСТРАЦИЯ",
+    value: "register",
+    icon: <UserAddOutlined />
+  }
+];
+
 const AuthPage: FC<IProps> = ({ isModalOpen, setIsModalOpen }): JSX.Element => {
   const [segment, setSegment] = useState("login");
-  console.log("segment", segment);
 
   const handleSegmentChange = (value: unknown) => {
     setSegment(value as string);
@@ -49,14 +58,7 @@ const AuthPage: FC<IProps> = ({ isModalOpen, setIsModalOpen }): JSX.Element => {
     >
       <Content>
         <SegmentedStyled
-          options={[
-            { label: "ВОЙТИ", value: "login", icon: <LoginOutlined /> },
-            {
-              label: "РЕГИСТРАЦИЯ",
-              value: "register",
-              icon: <UserAddOutlined />
-            }
-          ]}
+          options={options}
           block
           onChange={handleSegmentChange}
         />

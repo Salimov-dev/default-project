@@ -6,6 +6,7 @@ import { Button, Form, Input } from "antd";
 type FieldType = {
   username?: string;
   password?: string;
+  confirmPassword?: string;
   remember?: string;
 };
 
@@ -52,16 +53,9 @@ const RegisterForm: FC = (): JSX.Element => {
         <Input.Password />
       </Form.Item>
       <Form.Item<FieldType>
-        label="Пароль"
-        name="password"
-        rules={[{ required: true, message: "Введите пароль!" }]}
-      >
-        <Input.Password />
-      </Form.Item>
-      <Form.Item<FieldType>
-        label="Пароль"
-        name="password"
-        rules={[{ required: true, message: "Введите пароль!" }]}
+        label="Подтвердите пароль"
+        name="confirmPassword"
+        rules={[{ required: true, message: "Подтвердите пароль!" }]}
       >
         <Input.Password />
       </Form.Item>
