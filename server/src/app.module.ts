@@ -2,25 +2,20 @@ import { Module } from "@nestjs/common";
 import { SequelizeModule } from "@nestjs/sequelize";
 import { UserModule } from "./user/user.module";
 import { ConfigModule } from "@nestjs/config";
+import { ErrorService } from './error/error.service';
+import { ErrorModule } from './error/error.module';
 
 @Module({
   controllers: [],
-  providers: [],
+  providers: [ErrorService],
   imports: [
+    // TODO убедиться, что prod и dev версии env работают
     ConfigModule.forRoot({
+      isGlobal: true,
       envFilePath: `.${process.env.NODE_ENV}.env`
     }),
-    // SequelizeModule.forRoot({
-    //   dialect: "postgres",
-    //   host: process.env.POSTGRES_HOST,
-    //   port: Number(process.env.POSTGRES_PORT),
-    //   username: process.env.POSTGRES_USER,
-    //   password: process.env.POSTGRES_PASSWORD,
-    //   database: process.env.POSTGRES_DB,
-    //   models: [],
-    //   autoLoadModels: true
-    // }),
-    UserModule
+    UserModule,
+    ErrorModule
   ]
 })
 export class AppModule {}
