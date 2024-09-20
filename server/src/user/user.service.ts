@@ -11,7 +11,7 @@ export class UserService {
     return this.prisma.user.findMany();
   }
 
-  findOne(id: number) {
+  findOne(id: string) {
     return `This action returns a #${id} user`;
   }
 
@@ -22,17 +22,16 @@ export class UserService {
       });
       return newUser;
     } catch (error) {
-      // TODO вынести ошибки в один общий файл с ошибками
       console.error("Ошибка при создании пользователя:", error);
       throw new Error("Ошибка создания пользователя");
     }
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
+  update(id: string, updateUserDto: UpdateUserDto) {
     return `This action updates a #${id} user`;
   }
 
-  remove(id: number) {
+  remove(id: string) {
     return `This action removes a #${id} user`;
   }
 }

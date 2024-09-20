@@ -1,4 +1,3 @@
-import { ErrorService } from "./../../error/error.service";
 import {
   IsBoolean,
   IsEmail,
@@ -6,10 +5,9 @@ import {
   IsString,
   IsStrongPassword
 } from "class-validator";
+import { errorMessagesEnum } from "src/error/enum/error-messages.enum";
 
 export class CreateUserDto {
-  constructor(private readonly errorService: ErrorService) {}
-
   // TODO проработать валидацию
   @IsString()
   name: string;
@@ -17,7 +15,7 @@ export class CreateUserDto {
   @IsStrongPassword(
     {},
     {
-      message: this.messagesService.g
+      message: errorMessagesEnum.auth.password
     }
   )
   password: string;
@@ -25,14 +23,16 @@ export class CreateUserDto {
   @IsEmail(
     {},
     {
-      message: "Email введен неверно"
+      message: errorMessagesEnum.auth.email
     }
   )
   email: string;
 
   @IsBoolean()
+  @IsOptional()
   banned: boolean;
 
+  // TODO сделать enum для причин блокировки
   @IsOptional()
   @IsString()
   banReason: string;
