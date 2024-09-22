@@ -1,8 +1,9 @@
 import { Module } from "@nestjs/common";
-import { UserModule } from "./user/user.module";
+import { UserModule } from "@user/user.module";
 import { ConfigModule } from "@nestjs/config";
-import { ErrorService } from "./error/error.service";
-import { ErrorModule } from "./error/error.module";
+import { ErrorService } from "@error/error.service";
+import { ErrorModule } from "@error/error.module";
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   controllers: [],
@@ -13,7 +14,8 @@ import { ErrorModule } from "./error/error.module";
       envFilePath: `.${process.env.NODE_ENV}.env`
     }),
     UserModule,
-    ErrorModule
+    ErrorModule,
+    AuthModule
   ]
 })
 export class AppModule {}

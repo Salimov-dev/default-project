@@ -6,7 +6,6 @@ const PORT = process.env.PORT || 5000;
 
 async function start() {
   const app = await NestFactory.create(AppModule);
-  console.log("process.env.NODE_ENV", process.env.NODE_ENV);
 
   app.useGlobalPipes(new ValidationPipe());
   app.setGlobalPrefix("api");
