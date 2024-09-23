@@ -9,6 +9,7 @@ import { PrismaService } from "src/prisma.service";
 import { genSaltSync, hashSync } from "bcrypt";
 import { errorMessagesEnum } from "@auth/config";
 import { User } from "@prisma/client";
+import { UserResponse } from "./responses";
 
 @Injectable()
 export class UserService {
@@ -16,23 +17,29 @@ export class UserService {
   constructor(private readonly prismaService: PrismaService) {}
 
   findAll() {
-    return this.prismaService.user.findMany();
+    return this.prismaService.user
+      .findMany()
+      .then((users) => users.map((user) => new UserResponse(user)));
   }
 
-  findOne(email: string) {
-    return this.prismaService.user.findUnique({
+  async findOne(email: string) {
+    const foundedUser = await this.prismaService.user.findUnique({
       where: {
         email
       }
     });
+
+    return foundedUser ? new UserResponse(foundedUser) : null;
   }
 
-  findById(id: string) {
-    return this.prismaService.user.findUnique({
+  async findById(id: string) {
+    const foundedUser = await this.prismaService.user.findUnique({
       where: {
         id
       }
     });
+
+    return new UserResponse(foundedUser);
   }
 
   async create(createUserDto: CreateUserDto) {
@@ -42,7 +49,9 @@ export class UserService {
     });
 
     if (user) {
-      throw new ConflictException(errorMessagesEnum.auth.registerConflict);
+      throw new ConflictException(
+        errorMessagesEnum.auth.emailAlreadyRegistered
+      );
     }
 
     const hashedPassword = this.hashPassword(createUserDto.password);
@@ -53,21 +62,25 @@ export class UserService {
       });
       return newUser;
     } catch (error) {
-      // TODO заменить на logger, а console.log убрать
-      console.error(errorMessagesEnum.user.create, error);
+      this.logger.error(error);
       throw new Error(errorMessagesEnum.user.create);
     }
   }
 
-  update(id: string, updateUserDto: UpdateUserDto) {
-    return this.prismaService.user.update({
+  async update(id: string, updateUserDto: UpdateUserDto) {
+    const updatedUser = await this.prismaService.user.update({
       where: { id },
       data: updateUserDto
     });
+
+    return new UserResponse(updatedUser);
   }
 
-  remove(id: string) {
-    return this.prismaService.user.delete({ where: { id } });
+  async remove(id: string) {
+    return await this.prismaService.user.delete({
+      where: { id },
+      select: { id: true }
+    });
   }
 
   private hashPassword(password: string) {

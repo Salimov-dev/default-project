@@ -12,6 +12,8 @@ import { Response } from "express";
 import { JwtService } from "@nestjs/jwt";
 import { Token, User } from "@prisma/client";
 import { compareSync, genSaltSync, hashSync } from "bcrypt";
+// responses
+import { UserResponse } from "@user/responses";
 // enum
 import { EnvironmentEnum, errorMessagesEnum } from "./config";
 // interface
@@ -43,14 +45,16 @@ export class AuthService {
       });
 
     if (user) {
-      throw new ConflictException(errorMessagesEnum.auth.registerConflict);
+      throw new ConflictException(
+        errorMessagesEnum.auth.emailAlreadyRegistered
+      );
     }
 
     const hashedPassword = this.hashPassword(registerDto.password);
     const userData = { ...registerDto, password: hashedPassword };
     delete userData.passwordRepeat;
 
-    return await this.prismaService.user
+    const newUser = await this.prismaService.user
       .create({
         data: userData
       })
@@ -58,6 +62,8 @@ export class AuthService {
         this.logger.error(err);
         throw new BadRequestException(errorMessagesEnum.auth.register);
       });
+
+    return new UserResponse(newUser);
   }
 
   async login(loginDto: LoginDto, res: Response, agent: string): Promise<void> {

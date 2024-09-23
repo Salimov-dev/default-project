@@ -11,7 +11,7 @@ export const errorMessagesEnum = {
     IsPasswordsMatching: "Пароли не совпадают",
     login: "Не верный логин или пароль",
     register: "Регистрация завершилась ошибкой!",
-    registerConflict: "Пользователь с таким email уже зарегистрирован"
+    emailAlreadyRegistered: "Пользователь с таким email уже зарегистрирован"
   },
   user: {
     create: "Ошибка при создании пользователя"
