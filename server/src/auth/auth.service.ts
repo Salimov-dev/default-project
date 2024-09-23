@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   ConflictException,
+  HttpStatus,
   Injectable,
   Logger,
   UnauthorizedException
@@ -15,6 +16,8 @@ import { JwtService } from "@nestjs/jwt";
 import { PrismaService } from "src/prisma.service";
 import { v4 } from "uuid";
 import * as dayjs from "dayjs";
+import { Response } from "express";
+import { ConfigService } from "@nestjs/config";
 
 @Injectable()
 export class AuthService {
@@ -22,7 +25,8 @@ export class AuthService {
   constructor(
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
-    private readonly prismaService: PrismaService
+    private readonly prismaService: PrismaService,
+    private readonly configService: ConfigService
   ) {}
 
   async register(registerDto: RegisterDto) {
@@ -51,7 +55,7 @@ export class AuthService {
       });
   }
 
-  async login(loginDto: LoginDto): Promise<Tokens> {
+  async login(loginDto: LoginDto, res: Response): Promise<void> {
     const user: User = await this.userService
       .findOne(loginDto.email)
       .catch((err) => {
@@ -70,14 +74,13 @@ export class AuthService {
       throw new UnauthorizedException(errorMessagesEnum.auth.login);
     }
 
-    const accessToken = this.jwtService.sign({
-      id: user.id,
-      email: user.email,
-      roles: user.roles
-    });
+    const tokens = this.generateTokens(user);
 
-    const refreshToken = await this.getRefreshToken(user.id);
-    return { accessToken, refreshToken };
+    if (!tokens) {
+      throw new UnauthorizedException();
+    }
+
+    this.setRefreshTokenToCookies(await tokens, res);
   }
 
   private async getRefreshToken(userId: string): Promise<Token> {
@@ -93,7 +96,58 @@ export class AuthService {
     });
   }
 
+  async refreshTokens(refreshtoken: string, res: Response): Promise<void> {
+    if (!refreshtoken) {
+      throw new UnauthorizedException();
+    }
+
+    const token = await this.prismaService.token.delete({
+      where: { token: refreshtoken }
+    });
+
+    if (!token) {
+      throw new UnauthorizedException();
+    }
+
+    const user = await this.userService.findById(token.userId);
+
+    const tokens = this.generateTokens(user);
+    this.setRefreshTokenToCookies(await tokens, res);
+  }
+
   private hashPassword(password: string) {
     return hashSync(password, genSaltSync(10));
+  }
+
+  private setRefreshTokenToCookies(tokens: Tokens, res: Response) {
+    if (!tokens) {
+      throw new UnauthorizedException();
+    }
+
+    res.cookie("refreshToken", tokens.refreshToken.token, {
+      httpOnly: true,
+      sameSite: "lax",
+      expires: new Date(tokens.refreshToken.exp),
+      secure:
+        this.configService.get("NODE_ENV", "development") === "production", // TODO сделать enum на prod и dev режимы
+      path: "/"
+    });
+
+    res.status(HttpStatus.CREATED).json({ accessToken: tokens.accessToken });
+  }
+
+  private async generateTokens(user: User): Promise<Tokens> {
+    const accessToken =
+      "Bearer " +
+      this.jwtService.sign({
+        id: user.id,
+        email: user.email,
+        roles: user.roles
+      });
+
+    const refreshToken = await this.getRefreshToken(user.id);
+    const tokens = { accessToken, refreshToken };
+
+    return tokens;
   }
 }

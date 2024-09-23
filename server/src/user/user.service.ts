@@ -27,6 +27,14 @@ export class UserService {
     });
   }
 
+  findById(id: string) {
+    return this.prismaService.user.findUnique({
+      where: {
+        id
+      }
+    });
+  }
+
   async create(createUserDto: CreateUserDto) {
     const user: User = await this.findOne(createUserDto.email).catch((err) => {
       this.logger.error(err);
