@@ -8,12 +8,12 @@ import {
 } from "@nestjs/common";
 import { v4 } from "uuid";
 import * as dayjs from "dayjs";
-import { Request, Response } from "express";
+import { Response } from "express";
 import { JwtService } from "@nestjs/jwt";
 import { Token, User } from "@prisma/client";
 import { compareSync, genSaltSync, hashSync } from "bcrypt";
 // enum
-import { errorMessagesEnum } from "@error/enum/error-messages.enum";
+import { EnvironmentEnum, errorMessagesEnum } from "./config";
 // interface
 import { Tokens } from "./interface";
 // config
@@ -126,12 +126,15 @@ export class AuthService {
       throw new UnauthorizedException();
     }
 
+    const secure =
+      this.configService.get("NODE_ENV", EnvironmentEnum.Development) ===
+      EnvironmentEnum.Production;
+
     res.cookie("refreshToken", tokens.refreshToken.token, {
       httpOnly: true,
       sameSite: "lax",
       expires: new Date(tokens.refreshToken.exp),
-      secure:
-        this.configService.get("NODE_ENV", "development") === "production", // TODO сделать enum на prod и dev режимы
+      secure: secure,
       path: "/"
     });
 

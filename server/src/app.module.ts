@@ -1,20 +1,24 @@
 import { Module } from "@nestjs/common";
 import { UserModule } from "@user/user.module";
 import { ConfigModule } from "@nestjs/config";
-import { ErrorService } from "@error/error.service";
-import { ErrorModule } from "@error/error.module";
-import { AuthModule } from './auth/auth.module';
+import { AuthModule } from "./auth/auth.module";
+import { APP_GUARD } from "@nestjs/core";
+import { JwtAuthGuard } from "@auth/guards/jwt-auth.guard";
 
 @Module({
   controllers: [],
-  providers: [ErrorService],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard
+    }
+  ],
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: `.${process.env.NODE_ENV}.env`
     }),
     UserModule,
-    ErrorModule,
     AuthModule
   ]
 })

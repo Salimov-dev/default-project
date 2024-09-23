@@ -1,5 +1,5 @@
 import { RegisterDto } from "@auth/dto";
-import { errorMessagesEnum } from "@error/enum/error-messages.enum";
+import { errorMessagesEnum } from "@auth/config";
 import {
   ValidationArguments,
   ValidatorConstraint,

@@ -7,7 +7,7 @@ import {
 import { CreateUserDto, UpdateUserDto } from "./dto";
 import { PrismaService } from "src/prisma.service";
 import { genSaltSync, hashSync } from "bcrypt";
-import { errorMessagesEnum } from "@error/enum/error-messages.enum";
+import { errorMessagesEnum } from "@auth/config";
 import { User } from "@prisma/client";
 
 @Injectable()

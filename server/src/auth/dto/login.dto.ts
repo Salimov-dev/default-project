@@ -1,5 +1,5 @@
 import { IsEmail, IsStrongPassword, MinLength } from "class-validator";
-import { errorMessagesEnum } from "src/error/enum/error-messages.enum";
+import { errorMessagesEnum } from "@auth/config";
 
 export class LoginDto {
   @IsEmail(

@@ -1,10 +1,20 @@
 import { ConfigService } from "@nestjs/config";
-import { Controller, Get, Post, Body, Res, Req } from "@nestjs/common";
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Res,
+  Req,
+  UseInterceptors,
+  ClassSerializerInterceptor
+} from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import { LoginDto, RegisterDto } from "./dto";
 import { Request, Response } from "express";
-import { Cookie, UserAgent } from "@common/decorators";
+import { Cookie, Public, UserAgent } from "@common/decorators";
 
+@Public()
 @Controller("auth")
 export class AuthController {
   constructor(
@@ -12,13 +22,14 @@ export class AuthController {
     private readonly configService: ConfigService
   ) {}
 
+  @UseInterceptors(ClassSerializerInterceptor)
   @Post("register")
   register(@Body() registerDto: RegisterDto) {
     return this.authService.register(registerDto);
   }
 
+  @UseInterceptors(ClassSerializerInterceptor)
   @Post("login")
-  // login(@Body() loginDto: LoginDto, @Res() res: Response, @Req() req: Request) {
   login(
     @Body() loginDto: LoginDto,
     @Res() res: Response,

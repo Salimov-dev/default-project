@@ -6,7 +6,9 @@ import {
   Patch,
   Param,
   Delete,
-  ParseUUIDPipe
+  ParseUUIDPipe,
+  UseInterceptors,
+  ClassSerializerInterceptor
 } from "@nestjs/common";
 import { UserService } from "./user.service";
 import { CreateUserDto } from "./dto/create-user.dto";
@@ -21,11 +23,19 @@ export class UserController {
     return this.userService.findAll();
   }
 
-  @Get(":id")
-  findOne(@Param("id", ParseUUIDPipe) id: string) {
-    return this.userService.findOne(id);
+  @UseInterceptors(ClassSerializerInterceptor)
+  @Get("find-by-email/:email")
+  findOne(@Param("email") email: string) {
+    return this.userService.findOne(email);
   }
 
+  @UseInterceptors(ClassSerializerInterceptor)
+  @Get("find-by-id/:id")
+  findById(@Param("id", ParseUUIDPipe) id: string) {
+    return this.userService.findById(id);
+  }
+
+  @UseInterceptors(ClassSerializerInterceptor)
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
     return this.userService.create(createUserDto);
