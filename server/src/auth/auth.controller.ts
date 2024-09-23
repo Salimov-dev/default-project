@@ -1,16 +1,9 @@
 import { ConfigService } from "@nestjs/config";
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  UnauthorizedException,
-  Res
-} from "@nestjs/common";
+import { Controller, Get, Post, Body, Res, Req } from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import { LoginDto, RegisterDto } from "./dto";
-import { Response } from "express";
-import { Cookie } from "@common/decorators";
+import { Request, Response } from "express";
+import { Cookie, UserAgent } from "@common/decorators";
 
 @Controller("auth")
 export class AuthController {
@@ -25,15 +18,21 @@ export class AuthController {
   }
 
   @Post("login")
-  login(@Body() loginDto: LoginDto, @Res() res: Response) {
-    return this.authService.login(loginDto, res);
+  // login(@Body() loginDto: LoginDto, @Res() res: Response, @Req() req: Request) {
+  login(
+    @Body() loginDto: LoginDto,
+    @Res() res: Response,
+    @UserAgent() agent: string
+  ) {
+    return this.authService.login(loginDto, res, agent);
   }
 
   @Get("refresh-tokens")
   async refreshTokens(
-    @Cookie("refreshToken") refreshtoken: string,
-    @Res() res: Response
+    @Cookie("refreshToken") refreshToken: string,
+    @Res() res: Response,
+    @UserAgent() agent: string
   ) {
-    return this.authService.refreshTokens(refreshtoken, res);
+    return this.authService.refreshTokens(refreshToken, res, agent);
   }
 }

@@ -5,7 +5,7 @@ model User {
   name      String
   roles     Role[] @default([USER])
   banned    Boolean? @default(false) // @TODO сделать false по умолчанию, если не передается
-  banReason String?
+  banReason String? // @TODO сделать ban_reason
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
   Token Token[]
