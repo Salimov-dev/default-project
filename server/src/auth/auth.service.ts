@@ -183,4 +183,12 @@ export class AuthService {
       }
     });
   }
+
+  removeRefreshToken(token: string) {
+    return this.prismaService.token.delete({
+      where: {
+        token
+      }
+    });
+  }
 }
