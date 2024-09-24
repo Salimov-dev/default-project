@@ -13,6 +13,8 @@ import {
 import { UserService } from "./user.service";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
+import { CurrentUser } from "@common/decorators";
+import { JwtPayload } from "@auth/interface";
 
 @Controller("user")
 export class UserController {
@@ -50,7 +52,10 @@ export class UserController {
   }
 
   @Delete(":id")
-  remove(@Param("id", ParseUUIDPipe) id: string) {
-    return this.userService.remove(id);
+  remove(
+    @Param("id", ParseUUIDPipe) id: string,
+    @CurrentUser() user: JwtPayload
+  ) {
+    return this.userService.remove(id, user);
   }
 }

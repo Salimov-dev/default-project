@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   ConflictException,
+  ForbiddenException,
   Injectable,
   Logger
 } from "@nestjs/common";
@@ -8,8 +9,9 @@ import { CreateUserDto, UpdateUserDto } from "./dto";
 import { PrismaService } from "src/prisma.service";
 import { genSaltSync, hashSync } from "bcrypt";
 import { errorMessagesEnum } from "@auth/config";
-import { User } from "@prisma/client";
+import { Role, User } from "@prisma/client";
 import { UserResponse } from "./responses";
+import { JwtPayload } from "@auth/interface";
 
 @Injectable()
 export class UserService {
@@ -76,7 +78,11 @@ export class UserService {
     return new UserResponse(updatedUser);
   }
 
-  async remove(id: string) {
+  async remove(id: string, user: JwtPayload) {
+    if (user.id !== id && !user.roles.includes(Role.ADMIN)) {
+      throw new ForbiddenException();
+    }
+
     return await this.prismaService.user.delete({
       where: { id },
       select: { id: true }
