@@ -2,46 +2,87 @@ import {
   BadRequestException,
   ConflictException,
   ForbiddenException,
+  Inject,
   Injectable,
   Logger
 } from "@nestjs/common";
 import { CreateUserDto, UpdateUserDto } from "./dto";
-import { PrismaService } from "src/prisma.service";
+import { PrismaService } from "@prisma/prisma.service";
 import { genSaltSync, hashSync } from "bcrypt";
 import { errorMessagesEnum } from "@auth/config";
 import { Role, User } from "@prisma/client";
 import { UserResponse } from "./responses";
 import { JwtPayload } from "@auth/interface";
+import { ConfigService } from "@nestjs/config";
+import { convertToSecondsUtil } from "@common/utils";
+import { CACHE_MANAGER } from "@nestjs/cache-manager";
+import { Cache } from "cache-manager";
 
 @Injectable()
 export class UserService {
   private readonly logger = new Logger(UserService.name);
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(
+    private readonly prismaService: PrismaService,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
+    private readonly configService: ConfigService
+  ) {}
 
-  findAll() {
-    return this.prismaService.user
+  async findAll() {
+    return await this.prismaService.user
       .findMany()
       .then((users) => users.map((user) => new UserResponse(user)));
   }
 
-  async findOne(email: string) {
-    const foundedUser = await this.prismaService.user.findUnique({
-      where: {
-        email
-      }
-    });
+  // TODO переделать в findById
+  async findOne(email: string, isReset = false): Promise<User> {
+    if (isReset) {
+      await this.cacheManager.del(email);
+    }
 
-    return foundedUser ? new UserResponse(foundedUser) : null;
+    const user = await this.cacheManager.get<User>(email);
+    if (!user) {
+      const foundedUser = await this.prismaService.user.findUnique({
+        where: {
+          email
+        }
+      });
+
+      if (!foundedUser) {
+        return null;
+      }
+
+      const seconds = convertToSecondsUtil(this.configService.get("JWT_EXP"));
+      await this.cacheManager.set(email, foundedUser, seconds);
+      return foundedUser;
+    }
+
+    return user ? new UserResponse(user) : null;
   }
 
-  async findById(id: string) {
-    const foundedUser = await this.prismaService.user.findUnique({
-      where: {
-        id
-      }
-    });
+  async findById(id: string, isReset = false) {
+    if (isReset) {
+      await this.cacheManager.del(id);
+    }
 
-    return new UserResponse(foundedUser);
+    const user = await this.cacheManager.get<User>(id);
+
+    if (!user) {
+      const foundedUser = await this.prismaService.user.findUnique({
+        where: {
+          id
+        }
+      });
+
+      if (!foundedUser) {
+        return null;
+      }
+
+      const seconds = convertToSecondsUtil(this.configService.get("JWT_EXP"));
+      await this.cacheManager.set(id, foundedUser, seconds);
+      return foundedUser;
+    }
+
+    return user ? new UserResponse(user) : null;
   }
 
   async create(createUserDto: CreateUserDto) {
@@ -82,6 +123,11 @@ export class UserService {
     if (user.id !== id && !user.roles.includes(Role.ADMIN)) {
       throw new ForbiddenException();
     }
+
+    await Promise.all([
+      this.cacheManager.del(id),
+      this.cacheManager.del(user.email)
+    ]);
 
     return await this.prismaService.user.delete({
       where: { id },

@@ -24,7 +24,7 @@ import { ConfigService } from "@nestjs/config";
 import { LoginDto, RegisterDto } from "./dto";
 // service
 import { UserService } from "@user/user.service";
-import { PrismaService } from "src/prisma.service";
+import { PrismaService } from "@prisma/prisma.service";
 
 @Injectable()
 export class AuthService {
@@ -68,7 +68,7 @@ export class AuthService {
 
   async login(loginDto: LoginDto, res: Response, agent: string): Promise<void> {
     const user: User = await this.userService
-      .findOne(loginDto.email)
+      .findOne(loginDto.email, true)
       .catch((err) => {
         this.logger.error(err);
         throw new BadRequestException(errorMessagesEnum.auth.login);
@@ -90,6 +90,14 @@ export class AuthService {
     }
 
     this.setRefreshTokenToCookies(await tokens, res);
+  }
+
+  async removeRefreshToken(token: string) {
+    return await this.prismaService.token.delete({
+      where: {
+        token
+      }
+    });
   }
 
   async refreshTokens(
@@ -180,14 +188,6 @@ export class AuthService {
         exp: expireDate,
         userId,
         userAgent: agent
-      }
-    });
-  }
-
-  removeRefreshToken(token: string) {
-    return this.prismaService.token.delete({
-      where: {
-        token
       }
     });
   }
