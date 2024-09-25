@@ -58,4 +58,11 @@ export class UserController {
   ) {
     return this.userService.remove(id, user);
   }
+
+  // @UseGuards(RolesGuard)
+  // @Roles(Role.ADMIN)
+  // @Get()
+  // me(@CurrentUser() user: JwtPayload) {
+  //   return user;
+  // }
 }
