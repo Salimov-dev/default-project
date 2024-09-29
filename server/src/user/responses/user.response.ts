@@ -11,7 +11,9 @@ export class UserResponse implements User {
   @Exclude()
   createdAt: Date;
 
-  name: string;
+  userName: string;
+  firstName: string;
+  lastName: string;
   roles: Role[];
   banned: boolean;
   banReason: string;

@@ -10,7 +10,7 @@ import { errorMessagesEnum } from "@auth/config";
 export class CreateUserDto {
   // TODO проработать валидацию
   @IsString()
-  name: string;
+  userName: string;
 
   @IsStrongPassword(
     {},
@@ -27,6 +27,12 @@ export class CreateUserDto {
     }
   )
   email: string;
+
+  @IsString()
+  firstName: string;
+
+  @IsString()
+  lastName: string;
 
   @IsBoolean()
   @IsOptional()

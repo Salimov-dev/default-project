@@ -2,9 +2,7 @@ import { FC, useState } from "react";
 import styled from "styled-components";
 import { Modal, Segmented } from "antd";
 import { LoginOutlined, UserAddOutlined } from "@ant-design/icons";
-// forms
-import LoginForm from "@forms/auth/login.form";
-import RegisterForm from "@forms/auth/register.form";
+import { LoginForm, RegisterForm } from "@forms/auth";
 
 interface IProps {
   isModalOpen: boolean;
@@ -47,6 +45,7 @@ const AuthPage: FC<IProps> = ({ isModalOpen, setIsModalOpen }): JSX.Element => {
   };
 
   return (
+    // TODO вынести модалку в отдельный компонент common
     <Modal
       open={isModalOpen}
       onOk={handleOk}

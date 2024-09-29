@@ -11,8 +11,17 @@ import {
 import { errorMessagesEnum } from "@auth/config";
 
 export class RegisterDto {
+  // TODO сделать ограничения по мин и макс символам, только латиница
   @IsString()
-  name: string;
+  userName: string;
+
+  @IsEmail(
+    {},
+    {
+      message: errorMessagesEnum.auth.email
+    }
+  )
+  email: string;
 
   @IsStrongPassword(
     {},
@@ -33,13 +42,11 @@ export class RegisterDto {
   @Validate(IsPasswordsMatchingConstraint)
   passwordRepeat: string;
 
-  @IsEmail(
-    {},
-    {
-      message: errorMessagesEnum.auth.email
-    }
-  )
-  email: string;
+  @IsString()
+  firstName: string;
+
+  @IsString()
+  lastName: string;
 
   @IsBoolean()
   @IsOptional()

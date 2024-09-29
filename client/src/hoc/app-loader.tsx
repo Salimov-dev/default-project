@@ -8,8 +8,8 @@ interface IProps {
 
 const AppLoader: FC<IProps> = ({ children }) => {
   const loadTodosList = useTodosStore((state) => state.loadTodosList, shallow);
-  const todos = useTodosStore((state) => state.todos);
-  console.log("todos", todos);
+  // const todos = useTodosStore((state) => state.todos);
+  // console.log("todos", todos);
 
   useEffect(() => {
     loadTodosList();

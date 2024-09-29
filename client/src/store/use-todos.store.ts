@@ -1,13 +1,7 @@
+import { ITodo } from "@interfaces/todo.interface";
 import todoService from "@services/todo/todo.service";
-import { create } from "zustand";
+import { errorMessagesEnum } from "@utils/errors/error-messages.enum";
 import { createWithEqualityFn } from "zustand/traditional";
-
-export interface ITodo {
-  completed: boolean;
-  id: number;
-  title: string;
-  userId: number;
-}
 
 interface ITodoState {
   todos: ITodo[];
@@ -20,8 +14,10 @@ const useTodosStore = createWithEqualityFn<ITodoState>((set, get) => ({
   todos: [],
   isLoading: false,
   error: null,
+
   loadTodosList: async () => {
     set({ isLoading: true, error: null });
+
     try {
       const content = await todoService.getAll();
       set({ todos: content });
@@ -29,7 +25,7 @@ const useTodosStore = createWithEqualityFn<ITodoState>((set, get) => ({
       if (error instanceof Error) {
         set({ error: error.message });
       } else {
-        set({ error: "Неизвестная ошибка" });
+        set({ error: errorMessagesEnum.REQUEST_ERROR.UNKNOWN });
       }
     } finally {
       set({ isLoading: false });

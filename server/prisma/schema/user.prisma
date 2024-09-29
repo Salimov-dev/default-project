@@ -1,14 +1,16 @@
 model User {
-  id        String   @id @default(uuid())  
-  email     String   @unique
-  password  String
-  name      String
-  roles     Role[] @default([USER])
-  banned    Boolean? @default(false) // @TODO сделать false по умолчанию, если не передается
-  banReason String? // @TODO сделать ban_reason
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-  Token Token[]
+  id          String    @id @default(uuid())  
+  userName    String    @map("user_name")
+  email       String    @unique
+  password    String
+  firstName   String    @map("first_name")
+  lastName    String    @map("last_name")
+  roles       Role[]    @default([USER])
+  banned      Boolean?  @default(false) 
+  banReason   String?   @map("ban_reason")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+  Token       Token[]
   
   @@map("users")
 }

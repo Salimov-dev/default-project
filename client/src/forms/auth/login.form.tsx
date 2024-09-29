@@ -2,6 +2,7 @@ import { FC } from "react";
 import styled from "styled-components";
 import type { FormProps } from "antd";
 import { Button, Checkbox, Form, Input } from "antd";
+import { errorMessagesEnum } from "@utils/errors/error-messages.enum";
 
 type FieldType = {
   username?: string;
@@ -36,19 +37,26 @@ const LoginForm: FC = (): JSX.Element => {
       autoComplete="off"
     >
       <Form.Item<FieldType>
-        label="Почта"
+        label="Логин"
         name="username"
-        rules={[{ required: true, message: "Введите почту!" }]}
+        rules={[
+          { required: true, message: errorMessagesEnum.AUTH.LOGIN.REQUIRED }
+        ]}
       >
-        <Input />
+        <Input placeholder="Введите логин" autoComplete="username" />
       </Form.Item>
 
       <Form.Item<FieldType>
         label="Пароль"
         name="password"
-        rules={[{ required: true, message: "Введите пароль!" }]}
+        rules={[
+          { required: true, message: errorMessagesEnum.AUTH.PASSWORD.VALIDATE }
+        ]}
       >
-        <Input.Password />
+        <Input.Password
+          placeholder="Введите пароль"
+          autoComplete="new-password"
+        />
       </Form.Item>
 
       <Footer>
