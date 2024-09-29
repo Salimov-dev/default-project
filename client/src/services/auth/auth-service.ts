@@ -1,6 +1,6 @@
 import axios from "axios";
 import config from "@config/config.json";
-import { IUserRegistration } from "@interfaces/user.interface";
+import { ILoginData, IRegistrationUser } from "@interfaces/auth";
 
 const httpAuth = axios.create({
   baseURL: config.apiEndpoint + "auth/",
@@ -8,8 +8,14 @@ const httpAuth = axios.create({
 });
 
 const authService = {
-  register: async (newUser: IUserRegistration) => {
-    const { data } = await httpAuth.post(`register`, newUser);
+  register: async (newUser: IRegistrationUser) => {
+    const { data } = await httpAuth.post("register", newUser);
+    return data;
+  },
+  login: async (loginData: ILoginData) => {
+    const { data } = await httpAuth.post("login", loginData);
+    console.log("data", data);
+
     return data;
   }
 };

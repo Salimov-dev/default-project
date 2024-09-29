@@ -33,7 +33,7 @@ export class UserService {
       .then((users) => users.map((user) => new UserResponse(user)));
   }
 
-  // TODO переделать в findById
+  // TODO переделать в findByEmail
   async findOne(email: string, isReset = false): Promise<User> {
     if (isReset) {
       await this.cacheManager.del(email);

@@ -1,14 +1,17 @@
 import { createWithEqualityFn } from "zustand/traditional";
 import authService from "@services/auth/auth-service";
-import { IUser, IUserRegistration } from "@interfaces/user.interface";
-import { handleErrorNotification } from "@utils/errors/get-error-notification";
+
+import { handleErrorNotification } from "@utils/errors/handle-error-notification";
+import { ILoginData, IRegistrationUser } from "@interfaces/auth";
+import { IUser } from "@interfaces/user.interface";
 
 interface IAuthState {
   authUser: IUser | null;
   users: IUser[];
   isLoading: boolean;
   error: string | null;
-  register: (newUser: IUserRegistration) => void;
+  register: (newUser: IRegistrationUser) => void;
+  login: (loginData: ILoginData) => void;
 }
 
 const useAuthStore = createWithEqualityFn<IAuthState>((set, get) => ({
@@ -17,14 +20,29 @@ const useAuthStore = createWithEqualityFn<IAuthState>((set, get) => ({
   isLoading: false,
   error: null,
 
-  register: async (newUser: IUserRegistration) => {
+  register: async (newUser: IRegistrationUser) => {
     set({ isLoading: true, error: null });
 
     try {
       const data = await authService.register(newUser);
       return data;
     } catch (error) {
-      handleErrorNotification(error, set);
+      handleErrorNotification(error, set, "Ошибка регистрации");
+    } finally {
+      set({ isLoading: false });
+    }
+  },
+
+  login: async (loginData: ILoginData) => {
+    set({ isLoading: true, error: null });
+
+    try {
+      const data = await authService.login(loginData);
+      console.log("data");
+
+      return data;
+    } catch (error) {
+      handleErrorNotification(error, set, "Ошибка входа");
     } finally {
       set({ isLoading: false });
     }

@@ -3,9 +3,13 @@ import styled from "styled-components";
 import type { FormProps } from "antd";
 import { Button, Checkbox, Form, Input } from "antd";
 import { errorMessagesEnum } from "@utils/errors/error-messages.enum";
+import { useForm } from "antd/es/form/Form";
+import useAuthStore from "@store/use-auth.store";
+import { shallow } from "zustand/shallow";
+import { ILoginData } from "@interfaces/auth";
 
 type FieldType = {
-  username?: string;
+  email?: string;
   password?: string;
   remember?: string;
 };
@@ -18,7 +22,12 @@ const Footer = styled.div`
 `;
 
 const LoginForm: FC = (): JSX.Element => {
+  const [form] = useForm();
+
+  const login = useAuthStore((state) => state.login, shallow);
+
   const onFinish: FormProps<FieldType>["onFinish"] = (values) => {
+    login(values as ILoginData);
     console.log("Success:", values);
   };
 
@@ -30,20 +39,21 @@ const LoginForm: FC = (): JSX.Element => {
 
   return (
     <Form
-      name="basic"
+      name="login"
+      form={form}
       initialValues={{ remember: true }}
       onFinish={onFinish}
       onFinishFailed={onFinishFailed}
       autoComplete="off"
     >
       <Form.Item<FieldType>
-        label="Логин"
-        name="username"
+        label="Email"
+        name="email"
         rules={[
           { required: true, message: errorMessagesEnum.AUTH.LOGIN.REQUIRED }
         ]}
       >
-        <Input placeholder="Введите логин" autoComplete="username" />
+        <Input placeholder="Введите email" autoComplete="email" />
       </Form.Item>
 
       <Form.Item<FieldType>
@@ -60,9 +70,9 @@ const LoginForm: FC = (): JSX.Element => {
       </Form.Item>
 
       <Footer>
-        <Form.Item<FieldType> name="remember" valuePropName="checked">
+        {/* <Form.Item<FieldType> name="remember" valuePropName="checked">
           <Checkbox>Запомнить меня</Checkbox>
-        </Form.Item>
+        </Form.Item> */}
 
         <Form.Item>
           <Button type="primary" htmlType="submit">

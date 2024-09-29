@@ -6,7 +6,7 @@ import { useForm } from "antd/es/form/Form";
 import { errorMessagesEnum } from "@utils/errors/error-messages.enum";
 import { regexPatterns } from "@utils/regex/regex";
 import useAuthStore from "@store/use-auth.store";
-import { IUserRegistration } from "@interfaces/user.interface";
+import { IRegistrationUser } from "@interfaces/auth";
 import { shallow } from "zustand/shallow";
 
 type FieldType = {
@@ -33,7 +33,7 @@ const RegisterForm: FC = (): JSX.Element => {
   const register = useAuthStore((state) => state.register, shallow);
 
   const onFinish: FormProps<FieldType>["onFinish"] = (values) => {
-    register(values as IUserRegistration);
+    register(values as IRegistrationUser);
     console.log("Success:", values);
   };
 

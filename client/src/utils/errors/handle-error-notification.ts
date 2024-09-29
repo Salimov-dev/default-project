@@ -4,7 +4,8 @@ import { errorMessagesEnum } from "./error-messages.enum";
 
 export const handleErrorNotification = (
   error: AxiosError | unknown,
-  set: ({ error }: { error: string }) => void
+  set: ({ error }: { error: string }) => void,
+  message: string
 ) => {
   if (error instanceof AxiosError && error.response) {
     const errorMessage = error.response.data.message;
@@ -17,15 +18,19 @@ export const handleErrorNotification = (
       errorMessage.forEach((msg: string, index: number) => {
         setTimeout(() => {
           notification.error({
-            message: "Ошибка регистрации",
-            description: msg
+            message: message,
+            description: msg,
+            showProgress: true,
+            pauseOnHover: true
           });
         }, index * 300);
       });
     } else {
       notification.error({
-        message: "Ошибка регистрации",
-        description: errorMessage
+        message: message,
+        description: errorMessage,
+        showProgress: true,
+        pauseOnHover: true
       });
     }
 

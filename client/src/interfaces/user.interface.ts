@@ -11,16 +11,6 @@ export interface IUser {
   updatedAt: Date;
 }
 
-export interface IUserRegistration
-  extends Omit<IUser, "id" | "roles" | "banned" | "banReason" | "updatedAt"> {
-  passwordRepeat: string;
-  id?: string;
-  roles?: UserRoleEnum[];
-  banned?: boolean;
-  banReason?: BanReasonEnum[];
-  updatedAt?: Date;
-}
-
 export enum UserRoleEnum {
   ADMIN,
   USER,
