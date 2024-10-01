@@ -15,7 +15,8 @@ export const errorMessagesEnum = {
       MISMATCH: "Введенные пароли не совпадают"
     },
     LOGIN: {
-      REQUIRED: "Введите логин"
+      REQUIRED: "Введите логин",
+      ACCESS_TOKEN_NOT_FOUND: "Access token не найден"
     },
     FIRST_NAME: {
       REQUIRED: "Введите имя"

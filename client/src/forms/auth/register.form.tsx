@@ -5,7 +5,7 @@ import { Button, Form, Input } from "antd";
 import { useForm } from "antd/es/form/Form";
 import { errorMessagesEnum } from "@utils/errors/error-messages.enum";
 import { regexPatterns } from "@utils/regex/regex";
-import useAuthStore from "@store/use-auth.store";
+import { useAuthStore } from "@store";
 import { IRegistrationUser } from "@interfaces/auth";
 import { shallow } from "zustand/shallow";
 

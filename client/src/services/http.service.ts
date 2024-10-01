@@ -1,8 +1,17 @@
-import axios from "axios";
+import axios, { InternalAxiosRequestConfig } from "axios";
 import configFile from "@config/config.json";
 
 const http = axios.create({
-  baseURL: configFile.apiEndPoint
+  baseURL: configFile.apiEndpoint,
+  params: {},
+  withCredentials: true
+});
+
+http.interceptors.request.use((config: InternalAxiosRequestConfig) => {
+  const token = localStorage.getItem("token");
+  config.headers.Authorization = `Bearer ${token}`;
+
+  return config;
 });
 
 const httpService = {

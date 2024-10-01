@@ -4,7 +4,7 @@ import type { FormProps } from "antd";
 import { Button, Checkbox, Form, Input } from "antd";
 import { errorMessagesEnum } from "@utils/errors/error-messages.enum";
 import { useForm } from "antd/es/form/Form";
-import useAuthStore from "@store/use-auth.store";
+import { useAuthStore } from "@store";
 import { shallow } from "zustand/shallow";
 import { ILoginData } from "@interfaces/auth";
 
