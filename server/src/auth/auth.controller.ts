@@ -45,20 +45,7 @@ export class AuthController {
     @Cookie(REFRESH_TOKEN) refreshToken: string,
     @Res() res: Response
   ) {
-    if (!refreshToken) {
-      res.sendStatus(HttpStatus.OK);
-      return;
-    }
-
-    await this.authService.removeRefreshToken(refreshToken);
-
-    res.cookie(REFRESH_TOKEN, "", {
-      httpOnly: true,
-      secure: true,
-      expires: new Date()
-    });
-
-    res.sendStatus(HttpStatus.OK);
+    this.authService.logout(refreshToken, res);
   }
 
   @Get("refresh-tokens")

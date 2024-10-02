@@ -27,6 +27,11 @@ const authService = {
     return data;
   },
 
+  logout: async (): Promise<void> => {
+    await httpAuth.get("logout");
+    return;
+  },
+
   refreshTokens: async (): Promise<IAuthResponse> => {
     const { data } = await httpAuth.get<IAuthResponse>("refresh-tokens");
     return data;

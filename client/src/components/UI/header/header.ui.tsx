@@ -1,5 +1,5 @@
 import { FC, useState } from "react";
-import { Layout, theme } from "antd";
+import { Button, Layout, theme } from "antd";
 import styled from "styled-components";
 import { shallow } from "zustand/shallow";
 import AuthPage from "@pages/auth/auth.page";
@@ -25,7 +25,7 @@ const Header: FC<IProps> = ({ collapsed, setCollapsed }): JSX.Element => {
   } = theme.useToken();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const isAuth = useAuthStore((state) => state.isAuth, shallow);
-
+  const logout = useAuthStore((state) => state.logout);
   return (
     <Component
       style={{
@@ -34,6 +34,7 @@ const Header: FC<IProps> = ({ collapsed, setCollapsed }): JSX.Element => {
     >
       <HeaderCollapseButton collapsed={collapsed} setCollapsed={setCollapsed} />
       <HeaderLoginButton setIsModalOpen={setIsModalOpen} />
+      {isAuth && <Button onClick={logout}>Выйти</Button>}
       {isAuth ? "Авторизован" : "Залогинься!"}
       <AuthPage isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
     </Component>

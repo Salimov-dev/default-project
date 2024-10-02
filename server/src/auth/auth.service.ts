@@ -26,6 +26,8 @@ import { LoginDto, RegisterDto } from "./dto";
 import { UserService } from "@user/user.service";
 import { PrismaService } from "@prisma/prisma.service";
 
+const REFRESH_TOKEN = "refreshToken";
+
 @Injectable()
 export class AuthService {
   private readonly logger = new Logger(AuthService.name);
@@ -90,6 +92,23 @@ export class AuthService {
     }
 
     this.setRefreshTokenToCookies(await tokens, res);
+  }
+
+  async logout(refreshToken: string, res: Response) {
+    if (!refreshToken) {
+      res.sendStatus(HttpStatus.OK);
+      return;
+    }
+
+    await this.removeRefreshToken(refreshToken);
+
+    res.cookie(REFRESH_TOKEN, "", {
+      httpOnly: true,
+      secure: true,
+      expires: new Date()
+    });
+
+    res.sendStatus(HttpStatus.OK);
   }
 
   async removeRefreshToken(token: string) {

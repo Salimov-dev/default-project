@@ -14,6 +14,7 @@ interface IAuthState {
   error: string | null;
   register: (newUser: IRegistrationUser) => void;
   login: (loginData: ILoginData) => void;
+  logout: () => void;
   refreshTokens: () => void;
 }
 
@@ -102,6 +103,20 @@ const useAuthStore = createWithEqualityFn<IAuthState>((set, get) => ({
           roles
         }
       });
+    } catch (error) {
+      handleErrorNotification(
+        error,
+        set,
+        errorMessagesEnum.AUTH.TOKEN.REFRESH_TOKEN
+      );
+    }
+  },
+
+  logout: async () => {
+    try {
+      await authService.logout();
+      localStorage.removeItem("token");
+      set({ isAuth: false, authUser: null });
     } catch (error) {
       handleErrorNotification(
         error,
