@@ -9,7 +9,7 @@ const http = axios.create({
 
 http.interceptors.request.use((config: InternalAxiosRequestConfig) => {
   const token = localStorage.getItem("token");
-  config.headers.Authorization = `Bearer ${token}`;
+  config.headers.Authorization = token;
 
   return config;
 });

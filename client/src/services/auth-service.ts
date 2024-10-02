@@ -1,7 +1,11 @@
 import axios, { AxiosResponse } from "axios";
 import config from "@config/config.json";
-import { IAuthResponse, ILoginData, IRegistrationUser } from "@interfaces/auth";
 import { IUser } from "@interfaces/user.interface";
+import {
+  IAuthResponse,
+  ILoginData,
+  IRegistrationUser
+} from "@interfaces/auth.interface";
 
 const httpAuth = axios.create({
   baseURL: config.apiEndpoint + "auth/",
@@ -20,7 +24,11 @@ const authService = {
       "login",
       loginData
     );
+    return data;
+  },
 
+  refreshTokens: async (): Promise<IAuthResponse> => {
+    const { data } = await httpAuth.get<IAuthResponse>("refresh-tokens");
     return data;
   }
 };

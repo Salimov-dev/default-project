@@ -6,7 +6,7 @@ import { errorMessagesEnum } from "@utils/errors/error-messages.enum";
 import { useForm } from "antd/es/form/Form";
 import { useAuthStore } from "@store";
 import { shallow } from "zustand/shallow";
-import { ILoginData } from "@interfaces/auth";
+import { ILoginData } from "@interfaces/auth.interface";
 
 type FieldType = {
   email?: string;

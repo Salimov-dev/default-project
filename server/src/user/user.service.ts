@@ -33,8 +33,7 @@ export class UserService {
       .then((users) => users.map((user) => new UserResponse(user)));
   }
 
-  // TODO переделать в findByEmail
-  async findOne(email: string, isReset = false): Promise<User> {
+  async findByEmail(email: string, isReset = false): Promise<User> {
     if (isReset) {
       await this.cacheManager.del(email);
     }
@@ -86,10 +85,12 @@ export class UserService {
   }
 
   async create(createUserDto: CreateUserDto) {
-    const user: User = await this.findOne(createUserDto.email).catch((err) => {
-      this.logger.error(err);
-      throw new BadRequestException(errorMessagesEnum.auth.register);
-    });
+    const user: User = await this.findByEmail(createUserDto.email).catch(
+      (err) => {
+        this.logger.error(err);
+        throw new BadRequestException(errorMessagesEnum.auth.register);
+      }
+    );
 
     if (user) {
       throw new ConflictException(

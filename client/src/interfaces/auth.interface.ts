@@ -18,3 +18,9 @@ export interface ILoginData {
 export interface IAuthResponse {
   accessToken: string;
 }
+
+export interface IAuthUser {
+  id: string;
+  email: string;
+  roles: UserRoleEnum[];
+}

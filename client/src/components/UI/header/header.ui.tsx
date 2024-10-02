@@ -1,9 +1,11 @@
 import { FC, useState } from "react";
 import { Layout, theme } from "antd";
 import styled from "styled-components";
+import { shallow } from "zustand/shallow";
 import AuthPage from "@pages/auth/auth.page";
 import HeaderLoginButton from "./components/login-button.header";
 import HeaderCollapseButton from "./components/collapse-button.header";
+import { useAuthStore } from "@store";
 
 const Component = styled(Layout.Header)`
   padding: 0 14px 0 0;
@@ -22,6 +24,7 @@ const Header: FC<IProps> = ({ collapsed, setCollapsed }): JSX.Element => {
     token: { colorBgContainer }
   } = theme.useToken();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const isAuth = useAuthStore((state) => state.isAuth, shallow);
 
   return (
     <Component
@@ -31,7 +34,7 @@ const Header: FC<IProps> = ({ collapsed, setCollapsed }): JSX.Element => {
     >
       <HeaderCollapseButton collapsed={collapsed} setCollapsed={setCollapsed} />
       <HeaderLoginButton setIsModalOpen={setIsModalOpen} />
-
+      {isAuth ? "Авторизован" : "Залогинься!"}
       <AuthPage isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
     </Component>
   );

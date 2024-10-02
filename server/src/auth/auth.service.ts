@@ -38,7 +38,7 @@ export class AuthService {
 
   async register(registerDto: RegisterDto) {
     const user: User = await this.userService
-      .findOne(registerDto.email)
+      .findByEmail(registerDto.email)
       .catch((err) => {
         this.logger.error(err);
         throw new BadRequestException(errorMessagesEnum.auth.register);
@@ -68,7 +68,7 @@ export class AuthService {
 
   async login(loginDto: LoginDto, res: Response, agent: string): Promise<void> {
     const user: User = await this.userService
-      .findOne(loginDto.email, true)
+      .findByEmail(loginDto.email, true)
       .catch((err) => {
         this.logger.error(err);
         throw new BadRequestException(errorMessagesEnum.auth.login);
@@ -128,6 +128,7 @@ export class AuthService {
     const user = await this.userService.findById(token.userId);
 
     const tokens = this.generateTokens(user, agent);
+
     this.setRefreshTokenToCookies(await tokens, res);
   }
 

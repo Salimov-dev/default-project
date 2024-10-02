@@ -27,8 +27,8 @@ export class UserController {
 
   @UseInterceptors(ClassSerializerInterceptor)
   @Get("find-by-email/:email")
-  findOne(@Param("email") email: string) {
-    return this.userService.findOne(email);
+  findByEmail(@Param("email") email: string) {
+    return this.userService.findByEmail(email);
   }
 
   @UseInterceptors(ClassSerializerInterceptor)

@@ -16,13 +16,23 @@ export const errorMessagesEnum = {
     },
     LOGIN: {
       REQUIRED: "Введите логин",
-      ACCESS_TOKEN_NOT_FOUND: "Access token не найден"
+      ACCESS_TOKEN_NOT_FOUND: "Access token не найден",
+      LOGIN_ERROR: "Ошибка входа"
+    },
+    REGISTER: {
+      REGISTER_ERROR: "Ошибка при регистрации"
     },
     FIRST_NAME: {
       REQUIRED: "Введите имя"
     },
     LAST_NAME: {
       REQUIRED: "Введите фамилию"
+    },
+    TOKEN: {
+      REFRESH_TOKEN: "Ошибка при запросе refresh токена"
     }
+  },
+  USER: {
+    FIND_ALL: "Список пользователей не получен"
   }
 };
