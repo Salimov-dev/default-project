@@ -8,15 +8,20 @@ interface IProps {
 }
 
 const AppLoader: FC<IProps> = ({ children }) => {
+  // const allUsers = useUserStore((state) => state.users);
+  // console.log("allUsers", allUsers);
+
+  const findAllUsers = useUserStore((state) => state.findAll);
+
   const refreshTokens = useAuthStore((state) => state.refreshTokens, shallow);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
       refreshTokens();
+      findAllUsers();
     }
-    // findAllUsers();
-  }, [refreshTokens]);
+  }, [findAllUsers, refreshTokens]);
 
   return children;
 };

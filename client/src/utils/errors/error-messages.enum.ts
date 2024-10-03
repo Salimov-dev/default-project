@@ -33,6 +33,7 @@ export const errorMessagesEnum = {
     }
   },
   USER: {
-    FIND_ALL: "Список пользователей не получен"
+    FIND_ALL: "Список пользователей не получен",
+    FIND_BY_ID: "Пользователь по указанному ID не найден"
   }
 };

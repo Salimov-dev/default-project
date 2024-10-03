@@ -27,7 +27,9 @@
       "@utils": ["src/utils"],
       "@utils/*": ["src/utils/*"],
       "@interfaces": ["src/interfaces"],
-      "@interfaces/*": ["src/interfaces/*"]
+      "@interfaces/*": ["src/interfaces/*"],
+      "@hooks": ["src/hooks"],
+      "@hooks/*": ["src/hooks/*"]
     },
     "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
