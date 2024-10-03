@@ -1,14 +1,14 @@
-import { Button } from "antd";
+import { Button, ButtonProps } from "antd";
 import { FC } from "react";
 
-interface IProps {
+interface IProps extends ButtonProps {
   onClick: () => void;
   text: string;
 }
 
-const ButtonStyled: FC<IProps> = ({ onClick, text }): JSX.Element => {
+const ButtonStyled: FC<IProps> = ({ onClick, text, ...rest }): JSX.Element => {
   return (
-    <Button type="primary" danger onClick={onClick}>
+    <Button type="primary" onClick={onClick} {...rest}>
       {text}
     </Button>
   );

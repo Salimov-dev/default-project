@@ -4,26 +4,22 @@ import { SettingOutlined } from "@ant-design/icons";
 export const menuItems: MenuProps["items"] = [
   {
     key: "1",
-    label: "My Account",
-    disabled: true
+    label: "My Account"
   },
   {
     type: "divider"
   },
   {
     key: "2",
-    label: "Profile",
-    extra: "P⌘"
+    label: "Profile"
   },
   {
     key: "3",
-    label: "Billing",
-    extra: "⌘B"
+    label: "Billing"
   },
   {
     key: "4",
     label: "Settings",
-    icon: <SettingOutlined />,
-    extra: "⌘S"
+    icon: <SettingOutlined />
   }
 ];

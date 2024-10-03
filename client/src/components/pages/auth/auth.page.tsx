@@ -1,8 +1,11 @@
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
+import { shallow } from "zustand/shallow";
 import styled from "styled-components";
-import { Modal, Segmented } from "antd";
+import { Segmented } from "antd";
+import ModalStyled from "@common/modal-styled/modal-styled.common";
 import { LoginOutlined, UserAddOutlined } from "@ant-design/icons";
 import { LoginForm, RegisterForm } from "@forms/auth";
+import { useAuthStore } from "@store";
 
 interface IProps {
   isModalOpen: boolean;
@@ -31,6 +34,7 @@ const options = [
 
 const AuthPage: FC<IProps> = ({ isModalOpen, setIsModalOpen }): JSX.Element => {
   const [segment, setSegment] = useState("login");
+  const isAuth = useAuthStore((state) => state.isAuth, shallow);
 
   const handleSegmentChange = (value: unknown) => {
     setSegment(value as string);
@@ -44,17 +48,14 @@ const AuthPage: FC<IProps> = ({ isModalOpen, setIsModalOpen }): JSX.Element => {
     setIsModalOpen(false);
   };
 
+  useEffect(() => {
+    if (isAuth) {
+      setIsModalOpen(false);
+    }
+  }, [isAuth, setIsModalOpen]);
+
   return (
-    // TODO вынести модалку в отдельный компонент common
-    <Modal
-      open={isModalOpen}
-      onOk={handleOk}
-      onCancel={handleCancel}
-      okText="Подтвердить"
-      cancelText="Отменить"
-      footer={false}
-      width="400px"
-    >
+    <ModalStyled open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
       <Content>
         <SegmentedStyled
           options={options}
@@ -63,7 +64,7 @@ const AuthPage: FC<IProps> = ({ isModalOpen, setIsModalOpen }): JSX.Element => {
         />
         {segment === "login" ? <LoginForm /> : <RegisterForm />}
       </Content>
-    </Modal>
+    </ModalStyled>
   );
 };
 

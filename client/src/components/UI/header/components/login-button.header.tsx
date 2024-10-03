@@ -26,7 +26,7 @@ const HeaderLoginButton: FC<IProps> = memo(
         title={user ? `${user?.firstName} ${user?.lastName}` : "Аноним"}
       />
     ) : (
-      <ButtonStyled onClick={showModal} text="Войти" />
+      <ButtonStyled onClick={showModal} text="Войти" danger />
     );
   }
 );
