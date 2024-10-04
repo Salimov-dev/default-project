@@ -1,5 +1,4 @@
-import { useAuthStore } from "@store";
-import useUserStore from "@store/use-user.store";
+import { useAuthStore, useUserStore } from "@store";
 import { FC, useEffect } from "react";
 import { shallow } from "zustand/shallow";
 

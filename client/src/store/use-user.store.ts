@@ -1,18 +1,23 @@
 import { IUser } from "@interfaces/user.interface";
 import userService from "@services/user.service";
 import { errorMessagesEnum } from "@utils/errors/error-messages.enum";
-import { handleErrorNotification } from "@utils/errors/handle-error-notification";
+import { handleFetchErrorNotification } from "@utils/errors/handle-fetch-error-notification";
 import { createWithEqualityFn } from "zustand/traditional";
+
+/**
+ * Функция выводит полученное сообщение на экран пользователя с помощью Notification
+ *
+ */
 
 interface IUserState {
   users: IUser[] | null;
   isLoading: boolean;
   error: string | null;
   findAll: () => void;
-  findById: (userId: string) => any; // TODO исправить
+  findById: (userId: string) => Promise<IUser | undefined>;
 }
 
-const useUserStore = createWithEqualityFn<IUserState>((set, get) => ({
+const useUserStore = createWithEqualityFn<IUserState>((set) => ({
   users: null,
   isLoading: false,
   error: null,
@@ -24,7 +29,7 @@ const useUserStore = createWithEqualityFn<IUserState>((set, get) => ({
       const data = await userService.findAll();
       set({ users: data });
     } catch (error) {
-      handleErrorNotification(error, set, errorMessagesEnum.USER.FIND_ALL);
+      handleFetchErrorNotification(error, set, errorMessagesEnum.USER.FIND_ALL);
     } finally {
       set({ isLoading: false });
     }
@@ -35,9 +40,14 @@ const useUserStore = createWithEqualityFn<IUserState>((set, get) => ({
 
     try {
       const data = await userService.findById(userId);
+
       return data;
     } catch (error) {
-      handleErrorNotification(error, set, errorMessagesEnum.USER.FIND_BY_ID);
+      handleFetchErrorNotification(
+        error,
+        set,
+        errorMessagesEnum.USER.FIND_BY_ID
+      );
     } finally {
       set({ isLoading: false });
     }

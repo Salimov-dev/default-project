@@ -18,7 +18,7 @@ interface IProps {
 }
 
 const Header: FC<IProps> = ({ collapsed, setCollapsed }): JSX.Element => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isAuthPageOpen, setIsAuthPageOpen] = useState(false);
 
   const {
     token: { colorBgContainer }
@@ -31,9 +31,12 @@ const Header: FC<IProps> = ({ collapsed, setCollapsed }): JSX.Element => {
       }}
     >
       <HeaderCollapseButton collapsed={collapsed} setCollapsed={setCollapsed} />
-      <HeaderLoginButton setIsModalOpen={setIsModalOpen} />
+      <HeaderLoginButton setIsAuthPageOpen={setIsAuthPageOpen} />
 
-      <AuthPage isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
+      <AuthPage
+        isAuthPageOpen={isAuthPageOpen}
+        setIsAuthPageOpen={setIsAuthPageOpen}
+      />
     </Component>
   );
 };

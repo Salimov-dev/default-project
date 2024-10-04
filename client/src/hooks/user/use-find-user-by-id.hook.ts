@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { shallow } from "zustand/shallow";
-import useUserStore from "@store/use-user.store";
+import { useUserStore } from "@store";
 import { IUser } from "@interfaces/user.interface";
 
 const useFindUserById = (userId: string | undefined): IUser | null => {

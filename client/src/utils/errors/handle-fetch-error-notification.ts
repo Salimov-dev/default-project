@@ -2,7 +2,16 @@ import { notification } from "antd";
 import { AxiosError } from "axios";
 import { errorMessagesEnum } from "./error-messages.enum";
 
-export const handleErrorNotification = (
+/**
+ * Функция выводит полученную с сервера ошибку на экран пользователя с помощью Notification
+ *
+ * @param {AxiosError | unknown} error - ошибка с сервера
+ * @param {Function} set - метод Zustand, который устанавливает ошибку в store сущности
+ * @param {string} message - сообщение из ошибки
+ * @returns {void} - ничего не возвращает
+ */
+
+export const handleFetchErrorNotification = (
   error: AxiosError | unknown,
   set: ({ error }: { error: string }) => void,
   message: string

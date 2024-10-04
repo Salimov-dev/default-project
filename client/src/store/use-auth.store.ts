@@ -1,7 +1,7 @@
 import { createWithEqualityFn } from "zustand/traditional";
 import authService from "@services/auth-service";
 import { jwtDecode } from "jwt-decode";
-import { handleErrorNotification } from "@utils/errors/handle-error-notification";
+import { handleFetchErrorNotification } from "@utils/errors/handle-fetch-error-notification";
 import { ILoginData, IRegistrationUser } from "@interfaces/auth.interface";
 import { UserRoleEnum } from "@interfaces/user.interface";
 import { errorMessagesEnum } from "@utils/errors/error-messages.enum";
@@ -26,7 +26,7 @@ interface IDecodedToken {
   roles: UserRoleEnum[];
 }
 
-const useAuthStore = createWithEqualityFn<IAuthState>((set, get) => ({
+const useAuthStore = createWithEqualityFn<IAuthState>((set) => ({
   authUser: null,
   isLoading: false,
   isAuth: false,
@@ -37,9 +37,17 @@ const useAuthStore = createWithEqualityFn<IAuthState>((set, get) => ({
 
     try {
       const data = await authService.register(newUser);
+
+      const loginData: ILoginData = {
+        email: newUser.email,
+        password: newUser.password
+      };
+
+      await useAuthStore.getState().login(loginData);
+
       return data;
     } catch (error) {
-      handleErrorNotification(
+      handleFetchErrorNotification(
         error,
         set,
         errorMessagesEnum.AUTH.REGISTER.REGISTER_ERROR
@@ -75,7 +83,7 @@ const useAuthStore = createWithEqualityFn<IAuthState>((set, get) => ({
 
       return;
     } catch (error) {
-      handleErrorNotification(
+      handleFetchErrorNotification(
         error,
         set,
         errorMessagesEnum.AUTH.LOGIN.LOGIN_ERROR
@@ -104,7 +112,7 @@ const useAuthStore = createWithEqualityFn<IAuthState>((set, get) => ({
         }
       });
     } catch (error) {
-      handleErrorNotification(
+      handleFetchErrorNotification(
         error,
         set,
         errorMessagesEnum.AUTH.TOKEN.REFRESH_TOKEN
@@ -118,7 +126,7 @@ const useAuthStore = createWithEqualityFn<IAuthState>((set, get) => ({
       localStorage.removeItem("token");
       set({ isAuth: false, authUser: null });
     } catch (error) {
-      handleErrorNotification(
+      handleFetchErrorNotification(
         error,
         set,
         errorMessagesEnum.AUTH.TOKEN.REFRESH_TOKEN

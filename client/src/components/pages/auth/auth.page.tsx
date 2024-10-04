@@ -1,69 +1,45 @@
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect } from "react";
+import { useForm } from "antd/es/form/Form";
 import { shallow } from "zustand/shallow";
-import styled from "styled-components";
-import { Segmented } from "antd";
-import ModalStyled from "@common/modal-styled/modal-styled.common";
-import { LoginOutlined, UserAddOutlined } from "@ant-design/icons";
-import { LoginForm, RegisterForm } from "@forms/auth";
 import { useAuthStore } from "@store";
+import ModalStyled from "@common/modal-styled/modal-styled.common";
+import ContentAuthPage from "./components/content.auth-page";
 
 interface IProps {
-  isModalOpen: boolean;
-  setIsModalOpen: (value: boolean) => void;
+  isAuthPageOpen: boolean;
+  setIsAuthPageOpen: (value: boolean) => void;
 }
 
-const SegmentedStyled = styled(Segmented)`
-  margin: 0 0 10px 0;
-`;
+const AuthPage: FC<IProps> = ({
+  isAuthPageOpen,
+  setIsAuthPageOpen
+}): JSX.Element => {
+  const [form] = useForm();
 
-const Content = styled.div`
-  width: 100%;
-  padding: 30px 0 0 0;
-  display: flex;
-  flex-direction: column;
-`;
-
-const options = [
-  { label: "ВОЙТИ", value: "login", icon: <LoginOutlined /> },
-  {
-    label: "РЕГИСТРАЦИЯ",
-    value: "register",
-    icon: <UserAddOutlined />
-  }
-];
-
-const AuthPage: FC<IProps> = ({ isModalOpen, setIsModalOpen }): JSX.Element => {
-  const [segment, setSegment] = useState("login");
   const isAuth = useAuthStore((state) => state.isAuth, shallow);
 
-  const handleSegmentChange = (value: unknown) => {
-    setSegment(value as string);
-  };
-
   const handleOk = () => {
-    setIsModalOpen(false);
+    setIsAuthPageOpen(false);
   };
 
   const handleCancel = () => {
-    setIsModalOpen(false);
+    setIsAuthPageOpen(false);
+    form.resetFields();
   };
 
   useEffect(() => {
     if (isAuth) {
-      setIsModalOpen(false);
+      setIsAuthPageOpen(false);
     }
-  }, [isAuth, setIsModalOpen]);
+  }, [isAuth, setIsAuthPageOpen]);
+
+  useEffect(() => {
+    form.resetFields();
+  }, [form, isAuthPageOpen]);
 
   return (
-    <ModalStyled open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
-      <Content>
-        <SegmentedStyled
-          options={options}
-          block
-          onChange={handleSegmentChange}
-        />
-        {segment === "login" ? <LoginForm /> : <RegisterForm />}
-      </Content>
+    <ModalStyled open={isAuthPageOpen} onOk={handleOk} onCancel={handleCancel}>
+      <ContentAuthPage form={form} />
     </ModalStyled>
   );
 };
