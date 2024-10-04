@@ -1,13 +1,8 @@
 import { IUser } from "@interfaces/user.interface";
 import userService from "@services/user.service";
-import { errorMessagesEnum } from "@utils/errors/error-messages.enum";
-import { handleFetchErrorNotification } from "@utils/errors/handle-fetch-error-notification";
+import { errorMessagesEnum } from "@utils/errors/error-messages-enum.utils";
+import { handleFetchErrorNotification } from "@utils/errors/handle-fetch-error-notification.utils";
 import { createWithEqualityFn } from "zustand/traditional";
-
-/**
- * Функция выводит полученное сообщение на экран пользователя с помощью Notification
- *
- */
 
 interface IUserState {
   users: IUser[] | null;

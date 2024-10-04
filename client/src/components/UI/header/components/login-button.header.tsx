@@ -1,11 +1,15 @@
-import { shallow } from "zustand/shallow";
 import { FC, memo } from "react";
+import { shallow } from "zustand/shallow";
+import { MenuProps, Modal, Spin } from "antd";
 import { useAuthStore } from "@store";
 import useFindUserById from "@hooks/user/use-find-user-by-id.hook";
 import DropdownStyled from "@common/dropdown/dropdown-styled.common";
 import ButtonStyled from "@common/buttons-styled/buttons-styled.common";
-import { MenuProps } from "antd";
-import { LogoutOutlined, SettingOutlined } from "@ant-design/icons";
+import {
+  LogoutOutlined,
+  SettingOutlined,
+  UserOutlined
+} from "@ant-design/icons";
 
 interface IProps {
   setIsAuthPageOpen: (value: boolean) => void;
@@ -14,6 +18,7 @@ interface IProps {
 const HeaderLoginButton: FC<IProps> = memo(
   ({ setIsAuthPageOpen }): JSX.Element => {
     const isAuth = useAuthStore((state) => state.isAuth);
+    const isLoading = useAuthStore((state) => state.isLoading);
     const logout = useAuthStore((state) => state.logout);
     const authUser = useAuthStore((state) => state.authUser, shallow);
     const user = useFindUserById(authUser?.id);
@@ -48,11 +53,22 @@ const HeaderLoginButton: FC<IProps> = memo(
         label: "Выйти",
         icon: <LogoutOutlined />,
         onClick: () => {
-          console.log("click");
-          logout();
+          Modal.confirm({
+            title: "Точно выйти из системы?",
+            okText: "Выйти",
+            okType: "danger",
+            cancelText: "Остаться",
+            onOk: () => {
+              logout();
+            }
+          });
         }
       }
     ];
+
+    if (isLoading) {
+      return <Spin size="small" />;
+    }
 
     return isAuth ? (
       <DropdownStyled
@@ -60,7 +76,13 @@ const HeaderLoginButton: FC<IProps> = memo(
         title={user ? `${user?.firstName} ${user?.lastName}` : "Аноним"}
       />
     ) : (
-      <ButtonStyled onClick={showModal} text="Войти" danger />
+      <ButtonStyled
+        onClick={showModal}
+        text="Войти"
+        danger
+        isLoading={isLoading}
+        icon={<UserOutlined />}
+      />
     );
   }
 );

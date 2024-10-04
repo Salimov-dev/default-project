@@ -1,8 +1,8 @@
 import { Layout } from "antd";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 // hoc
-import AppLoader from "./hoc/app-loader";
+import AppLoader from "./hoc/app-loader.hoc";
 // UI
 import Content from "@UI/content/content.ui";
 import Sidebar from "@UI/sidebar/sidebar.ui";
@@ -12,8 +12,13 @@ const Component = styled(Layout)`
   height: 100vh;
 `;
 
-const App: React.FC = () => {
-  const [collapsed, setCollapsed] = useState(false);
+const isCollapsed = localStorage.getItem("isCollapsed") === "true";
+const App: React.FC = (): JSX.Element => {
+  const [collapsed, setCollapsed] = useState(isCollapsed);
+
+  useEffect(() => {
+    localStorage.setItem("isCollapsed", String(collapsed));
+  }, [collapsed]);
 
   return (
     <Component>

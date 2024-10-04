@@ -1,10 +1,10 @@
 import { createWithEqualityFn } from "zustand/traditional";
 import authService from "@services/auth-service";
 import { jwtDecode } from "jwt-decode";
-import { handleFetchErrorNotification } from "@utils/errors/handle-fetch-error-notification";
+import { handleFetchErrorNotification } from "@utils/errors/handle-fetch-error-notification.utils";
 import { ILoginData, IRegistrationUser } from "@interfaces/auth.interface";
 import { UserRoleEnum } from "@interfaces/user.interface";
-import { errorMessagesEnum } from "@utils/errors/error-messages.enum";
+import { errorMessagesEnum } from "@utils/errors/error-messages-enum.utils";
 import { IAuthUser } from "@interfaces/auth.interface";
 
 interface IAuthState {
@@ -94,6 +94,8 @@ const useAuthStore = createWithEqualityFn<IAuthState>((set) => ({
   },
 
   refreshTokens: async () => {
+    set({ isLoading: true, error: null });
+
     try {
       const { accessToken } = await authService.refreshTokens();
 
@@ -117,6 +119,8 @@ const useAuthStore = createWithEqualityFn<IAuthState>((set) => ({
         set,
         errorMessagesEnum.AUTH.TOKEN.REFRESH_TOKEN
       );
+    } finally {
+      set({ isLoading: false });
     }
   },
 

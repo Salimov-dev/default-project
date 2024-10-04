@@ -1,6 +1,6 @@
 import { notification } from "antd";
 import { AxiosError } from "axios";
-import { errorMessagesEnum } from "./error-messages.enum";
+import { errorMessagesEnum } from "./error-messages-enum.utils";
 
 /**
  * Функция выводит полученную с сервера ошибку на экран пользователя с помощью Notification

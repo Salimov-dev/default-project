@@ -1,13 +1,13 @@
-import { FC } from "react";
+import { FC, useEffect, useState } from "react";
 import type { FormInstance, FormProps } from "antd";
 import { Button, Flex, Form, Input } from "antd";
 import { shallow } from "zustand/shallow";
-import { regexPatterns } from "@utils/regex/regex";
-import { errorMessagesEnum } from "@utils/errors/error-messages.enum";
+import { regexPatterns } from "@utils/regex/regex.utils";
+import { errorMessagesEnum } from "@utils/errors/error-messages-enum.utils";
 import { useAuthStore } from "@store";
 import { IRegistrationUser } from "@interfaces/auth.interface";
-import { showNotification } from "@utils/show-notification/show-notification";
 import SpinStyled from "@common/spin-styled/spin-styled";
+import { showNotification } from "@utils/show-notification/show-notification.utils";
 
 type FieldType = {
   userName?: string;
@@ -26,13 +26,14 @@ interface IProps {
 const RegisterForm: FC<IProps> = ({ form }): JSX.Element => {
   const register = useAuthStore((state) => state.register, shallow);
   const isLoading = useAuthStore((state) => state.isLoading, shallow);
-  const error = useAuthStore((state) => state.error, shallow);
-  const hasError = !!error?.length;
+
+  const errorAuth = useAuthStore((state) => state.error, shallow);
+  const [error, setError] = useState(errorAuth);
 
   const onFinish: FormProps<FieldType>["onFinish"] = (values) => {
     register(values as IRegistrationUser);
 
-    if (!hasError) {
+    if (!error) {
       form.resetFields();
     }
   };
@@ -48,6 +49,10 @@ const RegisterForm: FC<IProps> = ({ form }): JSX.Element => {
         .join("; ")
     });
   };
+
+  useEffect(() => {
+    setError(errorAuth);
+  }, []);
 
   return (
     <SpinStyled spinning={isLoading}>
@@ -70,8 +75,8 @@ const RegisterForm: FC<IProps> = ({ form }): JSX.Element => {
             },
             {
               min: 3,
-              max: 30,
-              message: "Псевдоним пользователя должен быть от 3 до 30 символов"
+              max: 20,
+              message: "Псевдоним пользователя должен быть от 3 до 20 символов"
             }
           ]}
         >

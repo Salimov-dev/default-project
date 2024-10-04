@@ -33,10 +33,6 @@ const AuthPage: FC<IProps> = ({
     }
   }, [isAuth, setIsAuthPageOpen]);
 
-  useEffect(() => {
-    form.resetFields();
-  }, [form, isAuthPageOpen]);
-
   return (
     <ModalStyled open={isAuthPageOpen} onOk={handleOk} onCancel={handleCancel}>
       <ContentAuthPage form={form} />

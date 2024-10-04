@@ -6,7 +6,7 @@ import HeaderLoginButton from "./components/login-button.header";
 import HeaderCollapseButton from "./components/collapse-button.header";
 
 const Component = styled(Layout.Header)`
-  padding: 0 14px 0 0;
+  padding: 0 16px 0 0;
   display: flex;
   align-items: center;
   justify-content: space-between;

@@ -1,12 +1,13 @@
-import { FC } from "react";
+import { FC, useEffect, useState } from "react";
 import type { FormInstance, FormProps } from "antd";
 import { Button, Flex, Form, Input } from "antd";
-import { errorMessagesEnum } from "@utils/errors/error-messages.enum";
+import { errorMessagesEnum } from "@utils/errors/error-messages-enum.utils";
 import { useAuthStore } from "@store";
 import { shallow } from "zustand/shallow";
 import { ILoginData } from "@interfaces/auth.interface";
-import { showNotification } from "@utils/show-notification/show-notification";
+
 import SpinStyled from "@common/spin-styled/spin-styled";
+import { showNotification } from "@utils/show-notification/show-notification.utils";
 
 type FieldType = {
   email?: string;
@@ -21,13 +22,13 @@ interface IProps {
 const LoginForm: FC<IProps> = ({ form }): JSX.Element => {
   const login = useAuthStore((state) => state.login, shallow);
   const isLoading = useAuthStore((state) => state.isLoading, shallow);
-  const error = useAuthStore((state) => state.error, shallow);
-  const hasError = !!error?.length;
+  const errorAuth = useAuthStore((state) => state.error, shallow);
+  const [error, setError] = useState(errorAuth);
 
   const onFinish: FormProps<FieldType>["onFinish"] = (values) => {
     login(values as ILoginData);
 
-    if (isLoading && !hasError) {
+    if (!error) {
       form.resetFields();
     }
   };
@@ -43,6 +44,10 @@ const LoginForm: FC<IProps> = ({ form }): JSX.Element => {
         .join("; ")
     });
   };
+
+  useEffect(() => {
+    setError(errorAuth);
+  }, []);
 
   return (
     <SpinStyled spinning={isLoading}>
