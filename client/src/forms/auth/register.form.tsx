@@ -1,12 +1,12 @@
-import { FC, useEffect, useState } from "react";
+import { FC } from "react";
 import type { FormInstance, FormProps } from "antd";
 import { Button, Flex, Form, Input } from "antd";
 import { shallow } from "zustand/shallow";
-import { regexPatterns } from "@utils/regex/regex.utils";
-import { errorMessagesEnum } from "@utils/errors/error-messages-enum.utils";
 import { useAuthStore } from "@store";
 import { IRegistrationUser } from "@interfaces/auth.interface";
-import SpinStyled from "@common/spin-styled/spin-styled";
+import { InputStyled, SpinStyled } from "@common";
+import { regexPatterns } from "@utils/regex/regex.utils";
+import { ErrorMessagesEnum } from "@utils/errors/error-messages-enum.utils";
 import { showNotification } from "@utils/show-notification/show-notification.utils";
 
 type FieldType = {
@@ -27,32 +27,18 @@ const RegisterForm: FC<IProps> = ({ form }): JSX.Element => {
   const register = useAuthStore((state) => state.register, shallow);
   const isLoading = useAuthStore((state) => state.isLoading, shallow);
 
-  const errorAuth = useAuthStore((state) => state.error, shallow);
-  const [error, setError] = useState(errorAuth);
-
   const onFinish: FormProps<FieldType>["onFinish"] = (values) => {
     register(values as IRegistrationUser);
-
-    if (!error) {
-      form.resetFields();
-    }
+    form.resetFields();
   };
 
-  const onFinishFailed: FormProps<FieldType>["onFinishFailed"] = (
-    errorInfo
-  ) => {
+  const onFinishFailed: FormProps<FieldType>["onFinishFailed"] = () => {
     showNotification({
       type: "error",
-      message: errorMessagesEnum.AUTH.REGISTER.REGISTER_ERROR,
-      description: errorInfo.errorFields
-        .map((error) => `${error.name.join(", ")}: ${error.errors.join(", ")}`)
-        .join("; ")
+      message: ErrorMessagesEnum.FORM.REGISTER.REGISTER_ERROR,
+      description: ErrorMessagesEnum.FORM.REGISTER.DESCRIPTION
     });
   };
-
-  useEffect(() => {
-    setError(errorAuth);
-  }, []);
 
   return (
     <SpinStyled spinning={isLoading}>
@@ -71,16 +57,20 @@ const RegisterForm: FC<IProps> = ({ form }): JSX.Element => {
           rules={[
             {
               required: true,
-              message: errorMessagesEnum.AUTH.LOGIN.REQUIRED
+              message: ErrorMessagesEnum.AUTH.USER_NAME.REQUIRED
             },
             {
               min: 3,
               max: 20,
-              message: "Псевдоним пользователя должен быть от 3 до 20 символов"
+              message: ErrorMessagesEnum.AUTH.USER_NAME.LENGTH
             }
           ]}
         >
-          <Input placeholder="Введите псевдоним пользователя" />
+          <InputStyled
+            placeholder="Введите псевдоним пользователя"
+            value={form.getFieldValue("userName")}
+            onChange={(e) => form.setFieldsValue({ userName: e.target.value })}
+          />
         </Form.Item>
 
         <Form.Item<FieldType>
@@ -91,16 +81,20 @@ const RegisterForm: FC<IProps> = ({ form }): JSX.Element => {
           rules={[
             {
               required: true,
-              message: errorMessagesEnum.AUTH.FIRST_NAME.REQUIRED
+              message: ErrorMessagesEnum.AUTH.FIRST_NAME.REQUIRED
             },
             {
               min: 3,
               max: 20,
-              message: "Имя должно быть от 3 до 20 символов"
+              message: ErrorMessagesEnum.AUTH.FIRST_NAME.LENGTH
             }
           ]}
         >
-          <Input placeholder="Введите имя" />
+          <InputStyled
+            placeholder="Введите имя"
+            value={form.getFieldValue("firstName")}
+            onChange={(e) => form.setFieldsValue({ firstName: e.target.value })}
+          />
         </Form.Item>
 
         <Form.Item<FieldType>
@@ -111,16 +105,20 @@ const RegisterForm: FC<IProps> = ({ form }): JSX.Element => {
           rules={[
             {
               required: true,
-              message: errorMessagesEnum.AUTH.LAST_NAME.REQUIRED
+              message: ErrorMessagesEnum.AUTH.LAST_NAME.REQUIRED
             },
             {
               min: 3,
               max: 30,
-              message: "Фамилия должна быть от 3 до 20 символов"
+              message: ErrorMessagesEnum.AUTH.LAST_NAME.LENGTH
             }
           ]}
         >
-          <Input placeholder="Введите фамилию" />
+          <InputStyled
+            placeholder="Введите фамилию"
+            value={form.getFieldValue("lastName")}
+            onChange={(e) => form.setFieldsValue({ lastName: e.target.value })}
+          />
         </Form.Item>
 
         <Form.Item<FieldType>
@@ -131,20 +129,25 @@ const RegisterForm: FC<IProps> = ({ form }): JSX.Element => {
           rules={[
             {
               required: true,
-              message: errorMessagesEnum.AUTH.EMAIL.REQUIRED
+              message: ErrorMessagesEnum.REGISTER.EMAIL.REQUIRED
             },
             {
               pattern: regexPatterns.EMAIL,
-              message: errorMessagesEnum.AUTH.EMAIL.VALIDATE
+              message: ErrorMessagesEnum.REGISTER.EMAIL.VALIDATE
             },
             {
               min: 3,
               max: 30,
-              message: "Почта должна быть от 3 до 30 символов"
+              message: ErrorMessagesEnum.REGISTER.EMAIL.LENGTH
             }
           ]}
         >
-          <Input placeholder="Введите email" autoComplete="email" />
+          <InputStyled
+            placeholder="Введите email"
+            autoComplete="email"
+            value={form.getFieldValue("email")}
+            onChange={(e) => form.setFieldsValue({ email: e.target.value })}
+          />
         </Form.Item>
 
         <Form.Item<FieldType>
@@ -155,18 +158,19 @@ const RegisterForm: FC<IProps> = ({ form }): JSX.Element => {
           rules={[
             {
               required: true,
-              message: errorMessagesEnum.AUTH.PASSWORD.REQUIRED
+              message: ErrorMessagesEnum.AUTH.PASSWORD.REQUIRED
             },
             {
               min: 8,
               pattern: regexPatterns.PASSWORD,
-              message: errorMessagesEnum.AUTH.PASSWORD.VALIDATE
+              message: ErrorMessagesEnum.AUTH.PASSWORD.VALIDATE
             }
           ]}
         >
-          <Input.Password
-            placeholder="Введите пароль"
-            autoComplete="new-password"
+          <InputStyled
+            isPassword
+            value={form.getFieldValue("password")}
+            onChange={(e) => form.setFieldsValue({ password: e.target.value })}
           />
         </Form.Item>
         <Form.Item<FieldType>
@@ -177,12 +181,12 @@ const RegisterForm: FC<IProps> = ({ form }): JSX.Element => {
           rules={[
             {
               required: true,
-              message: errorMessagesEnum.AUTH.PASSWORD.REQUIRED_REPEAT
+              message: ErrorMessagesEnum.AUTH.PASSWORD.REQUIRED_REPEAT
             },
             {
               min: 8,
               pattern: regexPatterns.PASSWORD,
-              message: errorMessagesEnum.AUTH.PASSWORD.VALIDATE
+              message: ErrorMessagesEnum.AUTH.PASSWORD.VALIDATE
             },
             {
               validator(_, value) {
@@ -190,7 +194,7 @@ const RegisterForm: FC<IProps> = ({ form }): JSX.Element => {
 
                 if (!value || password !== value) {
                   return Promise.reject(
-                    new Error(errorMessagesEnum.AUTH.PASSWORD.MISMATCH)
+                    new Error(ErrorMessagesEnum.AUTH.PASSWORD.MISMATCH)
                   );
                 }
 
@@ -199,9 +203,13 @@ const RegisterForm: FC<IProps> = ({ form }): JSX.Element => {
             }
           ]}
         >
-          <Input.Password
-            placeholder="Повторите пароль"
-            autoComplete="new-password"
+          <InputStyled
+            isPassword
+            placeholderPassword="Повторите пароль"
+            value={form.getFieldValue("passwordRepeat")}
+            onChange={(e) =>
+              form.setFieldsValue({ passwordRepeat: e.target.value })
+            }
           />
         </Form.Item>
 

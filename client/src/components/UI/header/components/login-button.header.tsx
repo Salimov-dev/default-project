@@ -3,13 +3,12 @@ import { shallow } from "zustand/shallow";
 import { MenuProps, Modal, Spin } from "antd";
 import { useAuthStore } from "@store";
 import useFindUserById from "@hooks/user/use-find-user-by-id.hook";
-import DropdownStyled from "@common/dropdown/dropdown-styled.common";
-import ButtonStyled from "@common/buttons-styled/buttons-styled.common";
 import {
   LogoutOutlined,
   SettingOutlined,
   UserOutlined
 } from "@ant-design/icons";
+import { ButtonStyled, DropdownStyled } from "@common";
 
 interface IProps {
   setIsAuthPageOpen: (value: boolean) => void;
@@ -54,7 +53,7 @@ const HeaderLoginButton: FC<IProps> = memo(
         icon: <LogoutOutlined />,
         onClick: () => {
           Modal.confirm({
-            title: "Точно выйти из системы?",
+            title: "Выйти из системы?",
             okText: "Выйти",
             okType: "danger",
             cancelText: "Остаться",

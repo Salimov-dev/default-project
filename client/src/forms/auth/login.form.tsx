@@ -1,13 +1,13 @@
-import { FC, useEffect, useState } from "react";
+import { FC } from "react";
 import type { FormInstance, FormProps } from "antd";
-import { Button, Flex, Form, Input } from "antd";
-import { errorMessagesEnum } from "@utils/errors/error-messages-enum.utils";
-import { useAuthStore } from "@store";
 import { shallow } from "zustand/shallow";
+import { Button, Flex, Form } from "antd";
+import { useAuthStore } from "@store";
+import { ErrorMessagesEnum } from "@utils/errors/error-messages-enum.utils";
 import { ILoginData } from "@interfaces/auth.interface";
-
-import SpinStyled from "@common/spin-styled/spin-styled";
+import { InputStyled, SpinStyled } from "@common";
 import { showNotification } from "@utils/show-notification/show-notification.utils";
+import { regexPatterns } from "@utils/regex/regex.utils";
 
 type FieldType = {
   email?: string;
@@ -22,71 +22,77 @@ interface IProps {
 const LoginForm: FC<IProps> = ({ form }): JSX.Element => {
   const login = useAuthStore((state) => state.login, shallow);
   const isLoading = useAuthStore((state) => state.isLoading, shallow);
-  const errorAuth = useAuthStore((state) => state.error, shallow);
-  const [error, setError] = useState(errorAuth);
 
   const onFinish: FormProps<FieldType>["onFinish"] = (values) => {
     login(values as ILoginData);
-
-    if (!error) {
-      form.resetFields();
-    }
+    form.resetFields();
   };
 
-  const onFinishFailed: FormProps<FieldType>["onFinishFailed"] = (
-    errorInfo
-  ) => {
+  const onFinishFailed: FormProps<FieldType>["onFinishFailed"] = () => {
     showNotification({
       type: "error",
-      message: errorMessagesEnum.AUTH.LOGIN.LOGIN_ERROR,
-      description: errorInfo.errorFields
-        .map((error) => `${error.name.join(", ")}: ${error.errors.join(", ")}`)
-        .join("; ")
+      message: ErrorMessagesEnum.FORM.LOGIN.MESSAGE,
+      description: ErrorMessagesEnum.FORM.LOGIN.DESCRIPTION
     });
   };
 
-  useEffect(() => {
-    setError(errorAuth);
-  }, []);
-
   return (
-    <SpinStyled spinning={isLoading}>
+    <SpinStyled spinning={isLoading} height="50%">
       <Form
         name="login"
         form={form}
         initialValues={{ remember: true }}
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
-        autoComplete="off"
       >
         <Form.Item<FieldType>
           label="Email"
           name="email"
+          hasFeedback
           rules={[
-            { required: true, message: errorMessagesEnum.AUTH.LOGIN.REQUIRED }
+            { required: true, message: ErrorMessagesEnum.AUTH.EMAIL.REQUIRED },
+            {
+              whitespace: true,
+              message: ErrorMessagesEnum.AUTH.EMAIL.EMPTY
+            },
+            {
+              pattern: regexPatterns.EMAIL,
+              message: ErrorMessagesEnum.AUTH.EMAIL.VALIDATE
+            },
+            {
+              min: 8,
+              max: 30,
+              message: ErrorMessagesEnum.AUTH.EMAIL.LENGTH
+            }
           ]}
         >
-          <Input placeholder="Введите email" autoComplete="email" />
+          <InputStyled
+            placeholder="Введите email"
+            autoComplete="email"
+            value={form.getFieldValue("email")}
+            onChange={(e) => form.setFieldsValue({ email: e.target.value })}
+          />
         </Form.Item>
 
         <Form.Item<FieldType>
           label="Пароль"
           name="password"
+          hasFeedback
           rules={[
             {
               required: true,
-              message: errorMessagesEnum.AUTH.PASSWORD.VALIDATE
+              message: ErrorMessagesEnum.AUTH.PASSWORD.VALIDATE
             },
             {
-              min: 8,
-              max: 30,
-              message: "Почта должна быть от 8 до 30 символов"
+              whitespace: true,
+              message: ErrorMessagesEnum.AUTH.PASSWORD.EMPTY
             }
           ]}
         >
-          <Input.Password
-            placeholder="Введите пароль"
-            autoComplete="new-password"
+          <InputStyled
+            isPassword
+            value={form.getFieldValue("password")}
+            onChange={(e) => form.setFieldsValue({ password: e.target.value })}
           />
         </Form.Item>
 

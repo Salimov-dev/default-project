@@ -1,6 +1,6 @@
 import { IUser } from "@interfaces/user.interface";
 import userService from "@services/user.service";
-import { errorMessagesEnum } from "@utils/errors/error-messages-enum.utils";
+import { ErrorMessagesEnum } from "@utils/errors/error-messages-enum.utils";
 import { handleFetchErrorNotification } from "@utils/errors/handle-fetch-error-notification.utils";
 import { createWithEqualityFn } from "zustand/traditional";
 
@@ -24,7 +24,7 @@ const useUserStore = createWithEqualityFn<IUserState>((set) => ({
       const data = await userService.findAll();
       set({ users: data });
     } catch (error) {
-      handleFetchErrorNotification(error, set, errorMessagesEnum.USER.FIND_ALL);
+      handleFetchErrorNotification(error, set, ErrorMessagesEnum.USER.FIND_ALL);
     } finally {
       set({ isLoading: false });
     }
@@ -41,7 +41,7 @@ const useUserStore = createWithEqualityFn<IUserState>((set) => ({
       handleFetchErrorNotification(
         error,
         set,
-        errorMessagesEnum.USER.FIND_BY_ID
+        ErrorMessagesEnum.USER.FIND_BY_ID
       );
     } finally {
       set({ isLoading: false });

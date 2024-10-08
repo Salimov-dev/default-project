@@ -2,8 +2,8 @@ import { FC, useEffect } from "react";
 import { useForm } from "antd/es/form/Form";
 import { shallow } from "zustand/shallow";
 import { useAuthStore } from "@store";
-import ModalStyled from "@common/modal-styled/modal-styled.common";
 import ContentAuthPage from "./components/content.auth-page";
+import { ModalStyled } from "@common";
 
 interface IProps {
   isAuthPageOpen: boolean;

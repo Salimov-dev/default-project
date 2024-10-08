@@ -4,7 +4,7 @@ import { jwtDecode } from "jwt-decode";
 import { handleFetchErrorNotification } from "@utils/errors/handle-fetch-error-notification.utils";
 import { ILoginData, IRegistrationUser } from "@interfaces/auth.interface";
 import { UserRoleEnum } from "@interfaces/user.interface";
-import { errorMessagesEnum } from "@utils/errors/error-messages-enum.utils";
+import { ErrorMessagesEnum } from "@utils/errors/error-messages-enum.utils";
 import { IAuthUser } from "@interfaces/auth.interface";
 
 interface IAuthState {
@@ -50,7 +50,7 @@ const useAuthStore = createWithEqualityFn<IAuthState>((set) => ({
       handleFetchErrorNotification(
         error,
         set,
-        errorMessagesEnum.AUTH.REGISTER.REGISTER_ERROR
+        ErrorMessagesEnum.AUTH.REGISTER.REGISTER_ERROR
       );
     } finally {
       set({ isLoading: false });
@@ -64,7 +64,7 @@ const useAuthStore = createWithEqualityFn<IAuthState>((set) => ({
       const { accessToken } = await authService.login(loginData);
 
       if (!accessToken) {
-        throw new Error(errorMessagesEnum.AUTH.LOGIN.ACCESS_TOKEN_NOT_FOUND);
+        throw new Error(ErrorMessagesEnum.AUTH.LOGIN.ACCESS_TOKEN_NOT_FOUND);
       }
 
       localStorage.setItem("token", accessToken);
@@ -86,7 +86,7 @@ const useAuthStore = createWithEqualityFn<IAuthState>((set) => ({
       handleFetchErrorNotification(
         error,
         set,
-        errorMessagesEnum.AUTH.LOGIN.LOGIN_ERROR
+        ErrorMessagesEnum.AUTH.LOGIN.LOGIN_ERROR
       );
     } finally {
       set({ isLoading: false });
@@ -117,7 +117,7 @@ const useAuthStore = createWithEqualityFn<IAuthState>((set) => ({
       handleFetchErrorNotification(
         error,
         set,
-        errorMessagesEnum.AUTH.TOKEN.REFRESH_TOKEN
+        ErrorMessagesEnum.AUTH.TOKEN.REFRESH_TOKEN
       );
     } finally {
       set({ isLoading: false });
@@ -133,7 +133,7 @@ const useAuthStore = createWithEqualityFn<IAuthState>((set) => ({
       handleFetchErrorNotification(
         error,
         set,
-        errorMessagesEnum.AUTH.TOKEN.REFRESH_TOKEN
+        ErrorMessagesEnum.AUTH.TOKEN.REFRESH_TOKEN
       );
     }
   }

@@ -1,6 +1,6 @@
 import { notification } from "antd";
 import { AxiosError } from "axios";
-import { errorMessagesEnum } from "./error-messages-enum.utils";
+import { ErrorMessagesEnum } from "./error-messages-enum.utils";
 
 /**
  * Функция выводит полученную с сервера ошибку на экран пользователя с помощью Notification
@@ -20,7 +20,7 @@ export const handleFetchErrorNotification = (
     const errorMessage = error.response.data.message;
 
     if (!errorMessage) {
-      set({ error: errorMessagesEnum.REQUEST_ERROR.UNKNOWN });
+      set({ error: ErrorMessagesEnum.REQUEST_ERROR.UNKNOWN });
     }
 
     if (Array.isArray(errorMessage)) {
@@ -45,6 +45,6 @@ export const handleFetchErrorNotification = (
 
     set({ error: errorMessage });
   } else {
-    set({ error: errorMessagesEnum.REQUEST_ERROR.UNKNOWN });
+    set({ error: ErrorMessagesEnum.REQUEST_ERROR.UNKNOWN });
   }
 };
